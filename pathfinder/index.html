@@ -11,6 +11,50 @@
         <link rel="stylesheet" type="text/css" href="css/main.css">
     </head>
     <body>
+        <div class="app-wrapper">
+            <div class="main-interface">
+                <div class="site-branding">
+                    <img class="app-logo-white" src="img/logo-white-sm.png" />
+                    <span class="app-name">VizAlgo</span>
+                </div>
+                <div class="algorithms-wrapper">
+
+                    <form id="algorithms-select-form" class="algorithms-select-form">
+                        <div class="algorithms-input-group">
+                            <input name="algorithm-input-item" id="dijkstra-option" type="radio" value="dijkstra">
+                            <label for="dijkstra-option">Dijkstra</label>
+                        </div>
+                        <div class="algorithms-input-group">
+                            <input name="algorithm-input-item" id="a-option" type="radio" value="a">
+                            <label for="a-option">A*</label>
+                        </div>
+                        <div class="algorithms-input-group">
+                            <input name="algorithm-input-item" id="breadth-first-option" type="radio" value="breadth">
+                            <label for="breadth-first-option">Breadth-First</label>
+                        </div>
+                        <div class="algorithms-input-group">
+                            <input name="algorithm-input-item" id="depth-first-option" type="radio" value="depth">
+                            <label for="depth-first-option">Depth-First</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="map-buttons-wrapper">
+                    <button class="generate-map-button">
+                        <img class="generate-map-icon" src="img/generate-map.png" />
+                    </button>
+                    <div class="green-pin-container">
+                        <img class="green-pin" src="img/green-pin.png" />
+                    </div>
+                    <div class="red-pin-container">
+                        <img class="red-pin" src="img/red-pin.png" />
+                    </div>
+                </div>
+            </div>
+            <div class="map-wrapper">
+            </div>
+            <button class="reset-button">Reset</button>
+            <button class="visualize-button">Visualize</button>
+        </div>
         <script type="text/javascript" src="js/two.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     </body>
