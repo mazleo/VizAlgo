@@ -157,3 +157,8 @@ html {
 .app-wrapper .app-buttons-wrapper .app-button.visualize-button:hover {
   background-color: #39b757;
 }
+
+/* line 146, ../scss/main.scss */
+.tooltip {
+  font-size: 0.65rem;
+}

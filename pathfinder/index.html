@@ -24,30 +24,30 @@
                     <form id="algorithms-select-form" class="algorithms-select-form">
                         <div class="algorithms-input-group">
                             <input name="algorithm-input-item" id="dijkstra-option" type="radio" value="dijkstra">
-                            <label for="dijkstra-option">Dijkstra</label>
+                            <label for="dijkstra-option" data-toggle="tooltip" data-placement="top" title="Determines the shortest path. Dijkstra uses weighted edges.">Dijkstra</label>
                         </div>
                         <div class="algorithms-input-group">
                             <input name="algorithm-input-item" id="a-option" type="radio" value="a">
-                            <label for="a-option">A*</label>
+                            <label for="a-option" data-toggle="tooltip" data-placement="top" title="Determines the shortest path. A* uses weighted edges.">A*</label>
                         </div>
                         <div class="algorithms-input-group">
                             <input name="algorithm-input-item" id="breadth-first-option" type="radio" value="breadth">
-                            <label for="breadth-first-option">Breadth-First</label>
+                            <label for="breadth-first-option" data-toggle="tooltip" data-placement="top" title="Does not determine the shortest path. Breadth-First does not use weighted edges and uses the first path it finds.">Breadth-First</label>
                         </div>
                         <div class="algorithms-input-group">
                             <input name="algorithm-input-item" id="depth-first-option" type="radio" value="depth">
-                            <label for="depth-first-option">Depth-First</label>
+                            <label for="depth-first-option" data-toggle="tooltip" data-placement="top" title="Does not determine the shortest path. Depth-First does not use weighted edges and uses the first path it finds.">Depth-First</label>
                         </div>
                     </form>
                 </div>
                 <div class="map-buttons-wrapper d-flex flex-nowrap flex-row justify-content-between">
-                    <button class="generate-map-button map-button">
+                    <button class="generate-map-button map-button" data-toggle="tooltip" data-placement="top" title="Generate a new map">
                         <img class="generate-map-icon d-block" src="img/generate-map.png" />
                     </button>
-                    <div class="green-pin-container map-button">
+                    <div class="green-pin-container map-button" data-toggle="tooltip" data-placement="top" title="Drag and drop to a point in the map to select the origin">
                         <img class="green-pin d-block" src="img/green-pin.png" />
                     </div>
-                    <div class="red-pin-container map-button">
+                    <div class="red-pin-container map-button" data-toggle="tooltip" data-placement="top" title="Drag and drop to a point in the map to select the destination">
                         <img class="red-pin d-block " src="img/red-pin.png" />
                     </div>
                 </div>
@@ -55,12 +55,14 @@
             <div class="map-wrapper">
             </div>
             <div class="app-buttons-wrapper position-absolute">
-                <button class="reset-button app-button">Reset</button>
-                <button class="visualize-button app-button">Visualize</button>
+                <button class="reset-button app-button" data-toggle="tooltip" data-placement="top" title="Reset pins and clear map">Reset</button>
+                <button class="visualize-button app-button" data-toggle="tooltip" data-placement="top" title="Start algorithm visualization">Visualize</button>
             </div>
         </div>
         <script type="text/javascript" src="js/two.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="js/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="js/tooltips.js"></script>
     </body>
 </html>
