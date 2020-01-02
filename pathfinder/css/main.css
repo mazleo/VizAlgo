@@ -82,7 +82,7 @@ html {
 .app-wrapper .main-interface .map-buttons-wrapper .map-button img {
   width: 40px;
   height: 40px;
-  cursor: grab;
+  cursor: pointer;
 }
 /* line 78, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button:focus, .app-wrapper .main-interface .map-buttons-wrapper .map-button:active {
@@ -102,46 +102,58 @@ html {
   left: 7px;
 }
 /* line 96, ../scss/main.scss */
+.app-wrapper .main-interface .map-buttons-wrapper .map-button.green-pin-container img {
+  cursor: grab;
+}
+/* line 99, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button.green-pin-container:after {
   content: "Origin";
   left: 15px;
 }
-/* line 102, ../scss/main.scss */
+/* line 105, ../scss/main.scss */
+.app-wrapper .main-interface .map-buttons-wrapper .map-button.red-pin-container img {
+  cursor: grab;
+}
+/* line 108, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button.red-pin-container:after {
   content: "Destination";
   left: 2px;
 }
-/* line 109, ../scss/main.scss */
+/* line 115, ../scss/main.scss */
 .app-wrapper .map-wrapper {
   flex-basis: 75%;
   background-color: #232F3F;
 }
-/* line 113, ../scss/main.scss */
+/* line 119, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper {
   bottom: 15px;
   right: 15px;
 }
-/* line 116, ../scss/main.scss */
+/* line 122, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button {
   padding: 3px 7px;
   border-radius: 5px;
   color: #232F3F;
   border: none;
 }
-/* line 122, ../scss/main.scss */
+/* line 127, ../scss/main.scss */
+.app-wrapper .app-buttons-wrapper .app-button:active, .app-wrapper .app-buttons-wrapper .app-button:focus {
+  outline: 0;
+}
+/* line 131, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button.reset-button {
   background-color: #E85F62;
   margin-right: 5px;
 }
-/* line 125, ../scss/main.scss */
+/* line 134, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button.reset-button:hover {
   background-color: #c75356;
 }
-/* line 129, ../scss/main.scss */
+/* line 138, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button.visualize-button {
   background-color: #47E86D;
 }
-/* line 131, ../scss/main.scss */
+/* line 140, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button.visualize-button:hover {
   background-color: #39b757;
 }

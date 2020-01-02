@@ -73,7 +73,7 @@ html {
                 img {
                     width: 40px;
                     height: 40px;
-                    cursor: grab;
+                    cursor: pointer;
                 }
                 &:focus, &:active {
                     outline: 0;
@@ -93,12 +93,18 @@ html {
                 }
             }
             .map-button.green-pin-container {
+                img {
+                    cursor: grab;
+                }
                 &:after {
                     content: "Origin";
                     left: 15px;
                 }
             }
             .map-button.red-pin-container {
+                img {
+                    cursor: grab;
+                }
                 &:after {
                     content: "Destination";
                     left: 2px;
@@ -118,6 +124,9 @@ html {
             border-radius: 5px;
             color: $dark-blue;
             border: none;
+            &:active, &:focus {
+                outline: 0;
+            }
         }
         .app-button.reset-button {
             background-color: $va-light-red;
