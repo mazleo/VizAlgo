@@ -1,0 +1,147 @@
+/* line 3, ../scss/main.scss */
+html, body, .app-wrapper {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+/* line 9, ../scss/main.scss */
+html {
+  font-size: 18px;
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+/* line 13, ../scss/main.scss */
+.app-wrapper {
+  color: white;
+  font-weight: lighter;
+}
+/* line 16, ../scss/main.scss */
+.app-wrapper .main-interface {
+  flex-basis: 25%;
+  background-color: #3A4C63;
+  padding: 15px 30px;
+}
+/* line 20, ../scss/main.scss */
+.app-wrapper .main-interface .site-branding {
+  font-family: "Audiowide", sans-serif;
+  font-size: 1.43rem;
+  text-align: center;
+}
+/* line 24, ../scss/main.scss */
+.app-wrapper .main-interface .site-branding .app-logo-white {
+  width: 30px;
+}
+/* line 30, ../scss/main.scss */
+.app-wrapper .main-interface .algorithms-wrapper .algorithms-select-form .algorithms-input-group {
+  text-align: center;
+  margin-bottom: 10px;
+  position: relative;
+}
+/* line 34, ../scss/main.scss */
+.app-wrapper .main-interface .algorithms-wrapper .algorithms-select-form .algorithms-input-group label {
+  padding: 7px;
+  background-color: #4A5F7C;
+  margin: 0;
+  width: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+}
+/* line 41, ../scss/main.scss */
+.app-wrapper .main-interface .algorithms-wrapper .algorithms-select-form .algorithms-input-group label:hover {
+  background-color: #2F3F55;
+}
+/* line 45, ../scss/main.scss */
+.app-wrapper .main-interface .algorithms-wrapper .algorithms-select-form .algorithms-input-group input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+}
+/* line 53, ../scss/main.scss */
+.app-wrapper .main-interface .algorithms-wrapper .algorithms-select-form .algorithms-input-group input:checked ~ label {
+  background-color: white;
+  color: #4A5F7C;
+}
+/* line 63, ../scss/main.scss */
+.app-wrapper .main-interface .map-buttons-wrapper .map-button {
+  width: 60px;
+  height: 60px;
+  overflow: visible;
+  background-color: #4A5F7C;
+  padding: 10px;
+  border: none;
+  border-radius: 100%;
+  position: relative;
+  margin-bottom: 15px;
+}
+/* line 73, ../scss/main.scss */
+.app-wrapper .main-interface .map-buttons-wrapper .map-button img {
+  width: 40px;
+  height: 40px;
+  cursor: grab;
+}
+/* line 78, ../scss/main.scss */
+.app-wrapper .main-interface .map-buttons-wrapper .map-button:focus, .app-wrapper .main-interface .map-buttons-wrapper .map-button:active {
+  outline: 0;
+}
+/* line 81, ../scss/main.scss */
+.app-wrapper .main-interface .map-buttons-wrapper .map-button:after {
+  color: white;
+  position: absolute;
+  bottom: -18px;
+  font-size: 0.65rem;
+  cursor: default;
+}
+/* line 90, ../scss/main.scss */
+.app-wrapper .main-interface .map-buttons-wrapper .map-button.generate-map-button:after {
+  content: "Generate";
+  left: 7px;
+}
+/* line 96, ../scss/main.scss */
+.app-wrapper .main-interface .map-buttons-wrapper .map-button.green-pin-container:after {
+  content: "Origin";
+  left: 15px;
+}
+/* line 102, ../scss/main.scss */
+.app-wrapper .main-interface .map-buttons-wrapper .map-button.red-pin-container:after {
+  content: "Destination";
+  left: 2px;
+}
+/* line 109, ../scss/main.scss */
+.app-wrapper .map-wrapper {
+  flex-basis: 75%;
+  background-color: #232F3F;
+}
+/* line 113, ../scss/main.scss */
+.app-wrapper .app-buttons-wrapper {
+  bottom: 15px;
+  right: 15px;
+}
+/* line 116, ../scss/main.scss */
+.app-wrapper .app-buttons-wrapper .app-button {
+  padding: 3px 7px;
+  border-radius: 5px;
+  color: #232F3F;
+  border: none;
+}
+/* line 122, ../scss/main.scss */
+.app-wrapper .app-buttons-wrapper .app-button.reset-button {
+  background-color: #E85F62;
+  margin-right: 5px;
+}
+/* line 125, ../scss/main.scss */
+.app-wrapper .app-buttons-wrapper .app-button.reset-button:hover {
+  background-color: #c75356;
+}
+/* line 129, ../scss/main.scss */
+.app-wrapper .app-buttons-wrapper .app-button.visualize-button {
+  background-color: #47E86D;
+}
+/* line 131, ../scss/main.scss */
+.app-wrapper .app-buttons-wrapper .app-button.visualize-button:hover {
+  background-color: #39b757;
+}

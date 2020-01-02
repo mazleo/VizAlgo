@@ -13,8 +13,8 @@
         <link rel="stylesheet" type="text/css" href="css/main.css">
     </head>
     <body>
-        <div class="app-wrapper">
-            <div class="main-interface">
+        <div class="app-wrapper d-flex flex-nowrap flex-row justify-content-between align-items-stretch">
+            <div class="main-interface d-flex flex-nowrap flex-column justify-content-between">
                 <div class="site-branding">
                     <img class="app-logo-white" src="img/logo-white-sm.png" />
                     <span class="app-name">VizAlgo</span>
@@ -40,22 +40,24 @@
                         </div>
                     </form>
                 </div>
-                <div class="map-buttons-wrapper">
-                    <button class="generate-map-button">
-                        <img class="generate-map-icon" src="img/generate-map.png" />
+                <div class="map-buttons-wrapper d-flex flex-nowrap flex-row justify-content-between">
+                    <button class="generate-map-button map-button">
+                        <img class="generate-map-icon d-block" src="img/generate-map.png" />
                     </button>
-                    <div class="green-pin-container">
-                        <img class="green-pin" src="img/green-pin.png" />
+                    <div class="green-pin-container map-button">
+                        <img class="green-pin d-block" src="img/green-pin.png" />
                     </div>
-                    <div class="red-pin-container">
-                        <img class="red-pin" src="img/red-pin.png" />
+                    <div class="red-pin-container map-button">
+                        <img class="red-pin d-block " src="img/red-pin.png" />
                     </div>
                 </div>
             </div>
             <div class="map-wrapper">
             </div>
-            <button class="reset-button">Reset</button>
-            <button class="visualize-button">Visualize</button>
+            <div class="app-buttons-wrapper position-absolute">
+                <button class="reset-button app-button">Reset</button>
+                <button class="visualize-button app-button">Visualize</button>
+            </div>
         </div>
         <script type="text/javascript" src="js/two.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
