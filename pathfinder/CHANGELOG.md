@@ -20,3 +20,9 @@ __JL 1.2.2020__
     - Point.class
     - Intersect.class
     - Edge.class
+
+__JL 1.3.2020__
+- Reorder functions to improve readability
+- Fix wrong BOTTOM_EDGE_UPPER_BOUND_ANGLE
+- Add corner points for function use
+- Complete getAngleBounds() function
