@@ -160,7 +160,7 @@ class Road {
         this.topLeftPoint = this.getTopLeftPoint(map);
         this.topRightPoint = this.getTopRightPoint(map);
         this.maxDistance = this.calculateMaxDistance();
-        this.minDistance = this.getMinDistance();
+        this.minDistance = this.calculateMinDistance();
         this.distance = this.getRandomDistance();
         // TODO Change if supporting curved roads
         this.consecutivePoints = this.generateStraightRoad(map);
@@ -441,7 +441,7 @@ class Road {
     getRadFromDegree(degree) {
         return (degree * Math.PI) / 180;
     }
-    getMinDistance() {
+    calculateMinDistance() {
         return Math.ceil(this.maxDistance * 0.75);
     }
     getRandomDistance() {
@@ -493,6 +493,46 @@ class Road {
     fetchEndPoint() {
         var endPointIndex = this.consecutivePoints.length - 1;
         return this.consecutivePoints[endPointIndex];
+    }
+    
+    getId() {
+        return this.id;
+    }
+
+    getIsStartingCanvasEdge() {
+        return this.isStartingCanvasEdge;
+    }
+
+    getCanvasStartingEdge() {
+        return this.canvasStartingEdge;
+    }
+
+    getAngle() {
+        return this.angle;
+    }
+
+    getStartingPoint() {
+        return this.startingPoint;
+    }
+
+    getMaxDistance() {
+        return this.maxDistance;
+    }
+
+    getMinDistance() {
+        return this.minDistance;
+    }
+
+    getDistance() {
+        return this.distance;
+    }
+
+    getConsecutivePoints() {
+        return this.consecutivePoints;
+    }
+
+    getEndPoint() {
+        return this.endPoint;
     }
 }
 class CanvasMap {
