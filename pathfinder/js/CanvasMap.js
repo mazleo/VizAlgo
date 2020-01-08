@@ -46,7 +46,7 @@ class Edge {
         this.id = id;
         this.intersections = intersections;
         this.consecutivePoints = consecutivePoints;
-        this.distance = consecutivePoints.length;
+        this.distance = consecutivePoints.length - 1;
         this.points = this.generatePointsMap();
     }
     generatePointsMap() {
@@ -98,7 +98,7 @@ class Edge {
         this.updatePoints();
     }
     updateDistance() {
-        this.distance = this.consecutivePoints.length;
+        this.distance = this.consecutivePoints.length - 1;
     }
     updatePoints() {
         this.points = this.generatePointsMap();
@@ -479,7 +479,7 @@ class Road {
         consecutivePoints = new Array();
         consecutivePoints.push(this.startingPoint);
         currId = this.startingPoint.getId() + 1;
-        for (var p = 1; p <= this.distance; p++) {
+        for (var p = 0; p < this.distance; p++) {
             currentX += xOffset;
             currentY += yOffset;
 
