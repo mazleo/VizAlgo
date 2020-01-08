@@ -596,7 +596,7 @@ class Road {
         return this.endPoint;
     }
 }
-class CanvasMap {
+class RoadMap {
     constructor(width, height) {
         this.width = width;
         this.height = height;
