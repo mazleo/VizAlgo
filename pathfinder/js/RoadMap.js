@@ -625,6 +625,26 @@ class Road {
     getEndPoint() {
         return this.endPoint;
     }
+
+    getPoints() {
+        return this.points;
+    }
+
+    getIntersections() {
+        return this.intersections;
+    }
+
+    getEdges() {
+        return this.edges;
+    }
+
+    setIntersections(intersections) {
+        this.intersections = intersections;
+    }
+
+    setEdges(edges) {
+        this.edges = edges;
+    }
 }
 class RoadMap {
     constructor(width, height) {
