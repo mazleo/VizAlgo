@@ -32,12 +32,22 @@ class MapVisualizer {
                 break;
         }
     }
-    /*
-    TODO
-    static drawRoad(two, road) {
-        var path = MapVisualizer.createPathFromPoints()
+
+    static drawMap(two, roadsCollection) {
+        for(var [key, road] of roadsCollection) {
+            this.drawRoad(two, road);
+        }
     }
-    */
+
+    static drawRoad(two, road) {
+        var path;
+        
+        path = MapVisualizer.createPathFromPoints(road.getConsecutivePoints(), road.getStartingPoint());
+        MapVisualizer.applyPathSettings(path, MapVisualizer.PATH_MAP_TYPE);
+
+        two.add(path);
+        two.update();
+    }
 }
 
 MapVisualizer.PATH_MAP_TYPE = 0;
