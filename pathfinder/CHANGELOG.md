@@ -33,3 +33,14 @@ __JL 1.7.2020__
 - Complete generate straight road
 - Add MapVisualizer.js
 - Add getter methods in CanvasMap.js
+
+__JL 1.8.2020__
+- Correct distance and num of points calculation
+- Fix vertical density to improve readability
+- Complete map drawing
+- Fix and implement parts of RoadMaps.js
+    - Fix distance related defects
+    - Generate points map from points array
+    - Introduce intersections and edges fields
+    - Remove unneeded log comments
+- Add getter and setter methods to RoadMap.js
