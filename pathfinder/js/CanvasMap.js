@@ -4,15 +4,19 @@ class Point {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+
     getId() {
         return this.id;
     }
+
     getLatitude() {
         return this.latitude;
     }
+
     getLongitude() {
         return this.longitude;
     }
+
     equals(point) {
         if (this.id == point.getId() && this.latitude == point.getLatitude() && this.longitude == point.getLongitude()) {
             return true;
@@ -26,12 +30,15 @@ class Intersection extends Point {
     constructor(point) {
         super(point.getId(), point.getLatitude(), point.getLongitude());
     }
+
     setRoads(roads) {
         this.roads = roads;
     }
+
     getRoads() {
         return this.roads;
     }
+
     equalsPoint(point) {
         if (this.id == point.getId() && this.latitude == point.getLatitude() && this.longitude == point.getLongitude()) {
             return true;
@@ -49,12 +56,14 @@ class Edge {
         this.distance = consecutivePoints.length - 1;
         this.points = this.generatePointsMap();
     }
+
     generatePointsMap() {
         var pointsKeyValueArray = this.generatePointsKeyValueArrayFromConsecutivePoints();
         var newPointsMap = new Map(pointsKeyValueArray);
 
         return newPointsMap;
     }
+
     generatePointsKeyValueArrayFromConsecutivePoints() {
         var pointsKeyValueArray = new Array();
         for (var index = 0; index < this.distance; index++) {
@@ -64,6 +73,7 @@ class Edge {
         }
         return pointsKeyValueArray;
     }
+
     generatePointsKeyValuePairFromPoint(point) {
         var keyValuePair = new Array();
         keyValuePair[0] = point.getLatitude() + point.getLongitude();
@@ -71,41 +81,53 @@ class Edge {
 
         return keyValuePair;
     }
+
     getId() {
         return this.id;
     }
+
     getIntersections() {
         return this.intersections;
     }
+
     getConsecutivePoints() {
         return this.consecutivePoints;
     }
+
     getPoints() {
         return this.points;
     }
+
     getDistance() {
         return this.distance;
     }
+
     setId(id) {
         this.id = id;
     }
+
     setIntersections(intersections) {
         this.intersections = intersections;
     }
+
     setConsecutivePoints(consecutivePoints) {
         this.consecutivePoints = consecutivePoints;
         this.updateDistance();
         this.updatePoints();
     }
+
     updateDistance() {
         this.distance = this.consecutivePoints.length - 1;
     }
+
     updatePoints() {
         this.points = this.generatePointsMap();
     }
+
     getPointFromLocation(latitude, longitude) {
         return this.points.get(latitude + longitude);
     }
+
     getIntersection(point) {
         if (this.intersections[0].equalsPoint(point)) {
             return this.intersections[0];
@@ -117,6 +139,7 @@ class Edge {
             return null;
         }
     }
+
     hasIntersection(intersection) {
         if (this.intersections[0].equalsPoint(intersection) || this.intersections[1].equalsPoint(intersection)) {
             return true;
@@ -125,6 +148,7 @@ class Edge {
             return false;
         }
     }
+
     hasPoint(point) {
         var targetPoint = this.points.get(point.getLatitude() + point.getLongitude());
         return targetPoint != null && targetPoint.equals(point) ? true : false;
@@ -149,6 +173,7 @@ class Road {
     MAX_DISTANCE_PROB = 0.8;
     MID_DISTANCE_PROB = 0.15;
     MIN_DISTANCE_PROB = 0.05;
+
     constructor(id, map) {
         this.id = id;
         this.isStartingCanvasEdge = this.isStartingCanvasEdge();
@@ -166,10 +191,12 @@ class Road {
         this.consecutivePoints = this.generateStraightRoad(map);
         this.endPoint = this.fetchEndPoint();
     }
+
     isStartingCanvasEdge() {
         var randomNum = Math.random();
         return randomNum <= this.STARTING_EDGE_PROB ? true : false;
     }
+
     getRandomStartingEdge() {
         if (!this.isStartingCanvasEdge) {
             return null;
@@ -178,6 +205,7 @@ class Road {
             return Math.floor(Math.random() * 4);
         }
     }
+
     getRandomAngle() {
         var randomAngle = 0;
         if (this.isStartingCanvasEdge) {
@@ -202,36 +230,47 @@ class Road {
 
         return randomAngle;
     }
+
     getTopEdgeAngleRange() {
         return this.TOP_EDGE_UPPER_BOUND_ANGLE - (this.TOP_EDGE_LOWER_BOUND_ANGLE - 1);
     }
+
     getRightEdgeAngleRange() {
         return this.RIGHT_EDGE_UPPER_BOUND_ANGLE - (this.RIGHT_EDGE_LOWER_BOUND_ANGLE - 1);
     }
+
     getLeftEdgeAngleRange() {
         return this.LEFT_EDGE_UPPER_BOUND_ANGLE - (this.LEFT_EDGE_LOWER_BOUND_ANGLE - 1);
     }
+
     getBottomEdgeAngleRange() {
         return this.BOTTOM_EDGE_UPPER_BOUND_ANGLE - (this.BOTTOM_EDGE_LOWER_BOUND_ANGLE - 1);
     }
+
     getContainedAngleRange() {
         return this.ANGLE_UPPER_BOUND - (this.ANGLE_LOWER_BOUND - 1);
     }
+
     getTopEdgeAngleOffset() {
         return this.TOP_EDGE_LOWER_BOUND_ANGLE;
     }
+
     getRightEdgeAngleOffset() {
         return this.RIGHT_EDGE_LOWER_BOUND_ANGLE;
     }
+
     getLeftEdgeAngleOffset() {
         return this.LEFT_EDGE_LOWER_BOUND_ANGLE;
     }
+
     getBottomEdgeAngleOffset() {
         return this.BOTTOM_EDGE_LOWER_BOUND_ANGLE;
     }
+
     getContainedAngleOffset() {
         return this.ANGLE_LOWER_BOUND;
     }
+
     getRandomStartingPoint(map) {
         var xLowerBound = 0;
         var yLowerBound = 0;
@@ -268,18 +307,23 @@ class Road {
         var newPointId = map.numOfPoints;
         return new Point(newPointId, x, y);
     }
+
     getBottomLeftPoint(map) {
         return new Point(-1, 0, map.height);
     }
+
     getBottomRightPoint(map) {
         return new Point(-1, map.width, map.height);
     }
+
     getTopLeftPoint(map) {
         return new Point(-1, 0, 0);
     }
+
     getTopRightPoint(map) {
         return new Point(-1, map.width, 0);
     }
+
     calculateMaxDistance() {
         var maxDistance = null;
         var x = null;
@@ -289,6 +333,7 @@ class Road {
         angleBounds = this.getAngleBounds();
         if (this.isStartingCanvasEdge) {
             switch (this.canvasStartingEdge) {
+
                 case this.LEFT_STARTING_EDGE:
                     if (this.angle <= angleBounds.angleBound1) {
                         y = this.startingPoint.getLongitude();
@@ -300,6 +345,7 @@ class Road {
                         y = this.bottomRightPoint.getLongitude() - this.startingPoint.getLongitude();
                     }
                     break;
+
                 case this.TOP_STARTING_EDGE:
                     if (this.angle <= angleBounds.angleBound1) {
                         x = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
@@ -311,6 +357,7 @@ class Road {
                         x = this.startingPoint.getLatitude();
                     }
                     break;
+
                 case this.RIGHT_STARTING_EDGE:
                     if (this.angle <= angleBounds.angleBound1) {
                         y = this.bottomLeftPoint.getLongitude() - this.startingPoint.getLongitude();
@@ -322,6 +369,7 @@ class Road {
                         y = this.startingPoint.getLongitude();
                     }
                     break;
+
                 case this.BOTTOM_STARTING_EDGE:
                     if (this.angle <= angleBounds.angleBound1) {
                         x = this.startingPoint.getLatitude();
@@ -335,6 +383,7 @@ class Road {
                     break;
             }
         }
+
         else {
             if (this.angle <= angleBounds.angleBound1) {
                 x = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
@@ -352,10 +401,12 @@ class Road {
                 x = this.topRightPoint.getLatitude() - this.startingPoint.getLatitude();
             }
         }
+
         maxDistance = x != null ? (x / Math.cos(this.getRadFromDegree(this.angle))) : (y / Math.sin(this.getRadFromDegree(this.angle)));
 
         return Math.ceil(Math.abs(maxDistance));
     }
+
     getAngleBounds() {
         var angleBound1 = null;
         var angleBound2 = null;
@@ -364,6 +415,7 @@ class Road {
 
         if (this.isStartingCanvasEdge) {
             switch (this.canvasStartingEdge) {
+
                 case this.LEFT_STARTING_EDGE:
                     var xDist = this.topRightPoint.getLatitude();
                     var yDist = -1 * this.startingPoint.getLongitude();
@@ -375,6 +427,7 @@ class Road {
                     var angleBound2Rad = Math.atan(yDist / xDist);
                     angleBound2 = this.getDegreeFromRad(angleBound2Rad);
                     break;
+
                 case this.TOP_STARTING_EDGE:
                     var xDist = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
                     var yDist = this.bottomRightPoint.getLongitude();
@@ -387,6 +440,7 @@ class Road {
                     var diffAngleBound2 = this.getDegreeFromRad(diffAngleBound2Rad);
                     angleBound2 = 180 - diffAngleBound2;
                     break;
+
                 case this.RIGHT_STARTING_EDGE:
                     var xDist = this.startingPoint.getLatitude();
                     var yDist = this.bottomLeftPoint.getLongitude() - this.startingPoint.getLongitude();
@@ -398,6 +452,7 @@ class Road {
                     var additionAngleBound2Rad = Math.atan(yDist / xDist);
                     angleBound2 = this.getDegreeFromRad(additionAngleBound2Rad) + 180;
                     break;
+
                 case this.BOTTOM_STARTING_EDGE:
                     var xDist = this.startingPoint.getLatitude();
                     var yDist = this.startingPoint.getLongitude();
@@ -435,15 +490,19 @@ class Road {
 
         return {angleBound1: angleBound1, angleBound2: angleBound2, angleBound3: angleBound3, angleBound4: angleBound4};
     }
+
     getDegreeFromRad(rad) {
         return (rad * 180) / Math.PI;
     }
+
     getRadFromDegree(degree) {
         return (degree * Math.PI) / 180;
     }
+
     calculateMinDistance() {
         return Math.ceil(this.maxDistance * 0.75);
     }
+
     getRandomDistance() {
         var randomNum = Math.random();
         if (randomNum <= this.MAX_DISTANCE_PROB) {
@@ -458,6 +517,7 @@ class Road {
             return this.minDistance;
         }
     }
+
     generateStraightRoad() {
         var consecutivePoints;
         var xOffset;
@@ -490,6 +550,7 @@ class Road {
 
         return consecutivePoints;
     }
+
     fetchEndPoint() {
         var endPointIndex = this.consecutivePoints.length - 1;
         return this.consecutivePoints[endPointIndex];

@@ -1,4 +1,5 @@
 class MapVisualizer {
+
     static createPathFromPoints(points, startPoint) {
         var anchors = new Array();
 
@@ -13,6 +14,7 @@ class MapVisualizer {
 
         return new Two.Path(anchors, false, false);
     }
+
     static applyPathSettings(path, pathType) {
         path.cap = "round";
         path.linewidth = 7;
@@ -37,6 +39,7 @@ class MapVisualizer {
     }
     */
 }
+
 MapVisualizer.PATH_MAP_TYPE = 0;
 MapVisualizer.PATH_TRAVERSAL_TYPE = 1;
 MapVisualizer.PATH_FOUND_TYPE = 2;
