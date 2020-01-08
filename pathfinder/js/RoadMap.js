@@ -66,7 +66,7 @@ class Edge {
 
     generatePointsKeyValueArrayFromConsecutivePoints() {
         var pointsKeyValueArray = new Array();
-        for (var index = 0; index < this.distance; index++) {
+        for (var index = 0; index < this.consecutivePoints.length; index++) {
             var currentPoint = this.consecutivePoints[index]
             var newKeyValuePair = this.generatePointsKeyValuePairFromPoint(currentPoint);
             pointsKeyValueArray.push(newKeyValuePair);
@@ -190,6 +190,9 @@ class Road {
         // TODO Change if supporting curved roads
         this.consecutivePoints = this.generateStraightRoad(map);
         this.endPoint = this.fetchEndPoint();
+        this.points = this.generatePointsMap();
+        this.intersections = null;
+        this.edges = null;
     }
 
     isStartingCanvasEdge() {
@@ -533,8 +536,6 @@ class Road {
         angleRad = this.getRadFromDegree(this.angle);
         xOffset = Math.cos(angleRad);
         yOffset = Math.sin(angleRad);
-        console.log(xOffset);
-        console.log(yOffset);
 
         consecutivePoints = new Array();
         consecutivePoints.push(this.startingPoint);
@@ -554,6 +555,35 @@ class Road {
     fetchEndPoint() {
         var endPointIndex = this.consecutivePoints.length - 1;
         return this.consecutivePoints[endPointIndex];
+    }
+
+    generatePointsMap() {
+        var pointsKeyValueArray = this.generatePointsKeyValueArrayFromConsecutivePoints();
+        var newPointsMap = new Map(pointsKeyValueArray);
+
+        return newPointsMap;
+    }
+
+    generatePointsKeyValueArrayFromConsecutivePoints() {
+        var pointsKeyValueArray = new Array();
+        for (var index = 0; index < this.consecutivePoints.length; index++) {
+            var currentPoint = this.consecutivePoints[index]
+            var newKeyValuePair = this.generatePointsKeyValuePairFromPoint(currentPoint);
+            pointsKeyValueArray.push(newKeyValuePair);
+        }
+        return pointsKeyValueArray;
+    }
+
+    generatePointsKeyValuePairFromPoint(point) {
+        var keyValuePair = new Array();
+        keyValuePair[0] = point.getLatitude() + point.getLongitude();
+        keyValuePair[1] = point;
+
+        return keyValuePair;
+    }
+
+    hasPointFromLocation(latitude, longitude) {
+        return this.points.has(latitude + longitude);
     }
     
     getId() {
