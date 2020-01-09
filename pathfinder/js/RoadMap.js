@@ -710,9 +710,89 @@ class RoadMap {
         // TODO Replace points line
         var a = new Array();
         var b = new Array();
-        b[0] = 0;
-        b[1] = new Point(0,0,0);
-        a.push(b);
-        this.points = new Map(a);
+    }
+}
+
+class PointHashGridNode {
+    constructor(rKey, cKey, point) {
+        this.rKey = rKey;
+        this.cKey = cKey;
+        this.point = point;
+        this.next = null;
+    }
+
+    getRKey() {
+        return this.rKey;
+    }
+
+    getCKey() {
+        return this.cKey;
+    }
+
+    getPoint() {
+        return this.point;
+    }
+
+    equalsPoint(point) {
+        return (
+            this.point.getLatitude() == point.getLatitude()
+            && this.point.getLongitude() == point.getLongitude()
+        );
+    }
+}
+
+class PointHashGridLinkedList {
+    constructor() {
+        this.front = null;
+        this.length = 0;
+    }
+
+    add(rKey, cKey, point) {
+        var newNode = new PointHashGridNode(rKey, cKey, point);
+        newNode.next = this.front;
+        this.front = newNode;
+        this.length++;
+    }
+
+    isEmpty() {
+        return this.length == 0;
+    }
+
+    hasPoint(point) {
+        let ptr = this.front;
+        while (ptr != null) {
+            if (ptr.equalsPoint(point)) {
+                break;
+            }
+            
+            ptr = ptr.next;
+        }
+
+        return ptr == null ? false : true;
+    }
+
+    remove(point) {
+        if (this.isEmpty()) {
+            return;
+        }
+
+        let prev = null;
+        let ptr = this.front;
+
+        while (ptr != null) {
+            if (ptr.equalsPoint(point)) {
+                break;
+            }
+
+            prev = ptr;
+            ptr = ptr.next;
+        }
+
+        if (prev == null) {
+            this.front = this.front.next;
+        }
+        else if (ptr != null) {
+            prev.next = ptr.next;
+        }
     }
 }
