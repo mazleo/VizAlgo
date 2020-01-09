@@ -26,26 +26,80 @@ class Point {
         }
     }
 }
-class Intersection extends Point {
-    constructor(point) {
-        super(point.getId(), point.getLatitude(), point.getLongitude());
+class JunctionPoint {
+    constructor(point, road) {
+        this.point = point;
+        this.road = road;
     }
 
-    setRoads(roads) {
-        this.roads = roads;
+    getPoint() {
+        return this.point;
     }
 
-    getRoads() {
-        return this.roads;
+    getRoad() {
+        return this.road;
+    }
+}
+class Intersection {
+    constructor() {
+        this.junctionPoints = new Map();
+        this.numOfJunctionPoints = 0;
+        this.separationDistance = 0;
+    }
+    
+    hasJunctionPoint(junctionPoint) {
+        return this.junctionPoints.has(
+            junctionPoint.getPoint().getLatitude()
+            + junctionPoint.getPoint().getLongitude()
+        );
     }
 
-    equalsPoint(point) {
-        if (this.id == point.getId() && this.latitude == point.getLatitude() && this.longitude == point.getLongitude()) {
-            return true;
+    addJunctionPoint(junctionPoint) {
+        if (this.numOfJunctionPoints == 2) {
+            throw '[error] Maximum number of junction points reached';
         }
-        else {
-            return false;
+        this.junctionPoints.set(
+            junctionPoint.getPoint().getLatitude() + junctionPoint.getPoint().getLongitude(),
+            junctionPoint
+        );
+        this.numOfJunctionPoints++;
+        this.calculateSeparationDistance();
+    }
+
+    calculateSeparationDistance() {
+        if (this.numOfJunctionPoints <= 1) {
+            this.separationDistance = 0;
         }
+        else if (this.numOfJunctionPoints == 2) {
+            let j = 0;
+            let tempJuncArray = new Array();
+
+            for (let [key, junctionPoint] of this.junctionPoints) {
+                tempJuncArray[j] = junctionPoint;
+                j++;
+            }
+
+            let xDistance = Math.abs(
+                tempJuncArray[0].getPoint().getLatitude()
+                - tempJuncArray[1].getPoint().getLatitude()
+            );
+            let yDistance = Math.abs(
+                tempJuncArray[0].getPoint().getLongitude()
+                - tempJuncArray[1].getPoint().getLongitude()
+            );
+
+            this.separationDistance = Math.sqrt(
+                (xDistance*xDistance) + (yDistance*yDistance)
+            );
+        }
+    }
+
+    getJunctionPoints() {
+        return this.junctionPoints;
+    }
+
+    getSeparationDistance() {
+        return this.separationDistance;
     }
 }
 class Edge {
@@ -128,6 +182,7 @@ class Edge {
         return this.points.get(latitude + longitude);
     }
 
+    /*
     getIntersection(point) {
         if (this.intersections[0].equalsPoint(point)) {
             return this.intersections[0];
@@ -148,6 +203,7 @@ class Edge {
             return false;
         }
     }
+    */
 
     hasPoint(point) {
         var targetPoint = this.points.get(point.getLatitude() + point.getLongitude());
