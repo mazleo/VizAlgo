@@ -44,3 +44,11 @@ __JL 1.8.2020__
     - Introduce intersections and edges fields
     - Remove unneeded log comments
 - Add getter and setter methods to RoadMap.js
+
+__JL 1.9.2020__
+- Add JunctionPoint class
+- Remove old intersection logic from Edge
+
+__JL 1.28.2020__
+- Add reference to containing road in points
+- Complete MinDistanceHeap class
