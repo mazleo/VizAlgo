@@ -1,8 +1,9 @@
 class Point {
-    constructor(id, latitude, longitude) {
+    constructor(id, latitude, longitude, containingRoad) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.containingRoad = containingRoad;
     }
 
     getId() {
@@ -15,6 +16,10 @@ class Point {
 
     getLongitude() {
         return this.longitude;
+    }
+
+    getContainingRoad() {
+        return this.containingRoad;
     }
 
     equals(point) {
@@ -364,23 +369,23 @@ class Road {
         }
 
         var newPointId = map.numOfPoints;
-        return new Point(newPointId, x, y);
+        return new Point(newPointId, x, y, this);
     }
 
     getBottomLeftPoint(map) {
-        return new Point(-1, 0, map.height);
+        return new Point(-1, 0, map.height, null);
     }
 
     getBottomRightPoint(map) {
-        return new Point(-1, map.width, map.height);
+        return new Point(-1, map.width, map.height, null);
     }
 
     getTopLeftPoint(map) {
-        return new Point(-1, 0, 0);
+        return new Point(-1, 0, 0, null);
     }
 
     getTopRightPoint(map) {
-        return new Point(-1, map.width, 0);
+        return new Point(-1, map.width, 0, null);
     }
 
     calculateMaxDistance() {
@@ -600,7 +605,7 @@ class Road {
             currentX += xOffset;
             currentY += yOffset;
 
-            var newPoint = new Point(currId, currentX, currentY);
+            var newPoint = new Point(currId, currentX, currentY, this);
             consecutivePoints.push(newPoint);
             currId++;
         }
