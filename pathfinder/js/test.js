@@ -255,6 +255,37 @@ class TestPointHashGrid {
             }
         }
     }
+
+    static testPutRoad(numTests) {
+        let mapWrapper = document.getElementById('map-wrapper');
+        let map = new RoadMap(mapWrapper.offsetWidth, mapWrapper.offsetHeight);
+        let phg = new PointHashGrid(map);
+
+        for (let t = 0; t < numTests; t++) {
+            map.generateRoad();
+        }
+
+        for (let [roadId, road] of map.roads) {
+            phg.putRoad(road);
+        }
+
+        let hasNonExistingPoint = false;
+
+        for (let [roadId, road] of map.roads) {
+            for (let [pointId, point] of road.points) {
+                if (!phg.contains(point)) {
+                    hasNonExistingPoint = true;
+                }
+            }
+        }
+
+        if (!hasNonExistingPoint) {
+            console.log('PASS');
+        }
+        else {
+            console.log('FAIL');
+        }
+    }
 }
 
-//TestPointHashGrid.testContains(100000);
+TestPointHashGrid.testPutRoad(100);

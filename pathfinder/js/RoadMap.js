@@ -904,9 +904,9 @@ class PointHashGrid {
     initializeGrid() {
         let grid = new Array();
 
-        for (let r = 0; r < this.numRows; r++) {
+        for (let r = 0; r <= this.numRows; r++) {
             grid[r] = new Array();
-            for (let c = 0; c < this.numColumns; c++) {
+            for (let c = 0; c <= this.numColumns; c++) {
                 grid[r][c] = new PointHashGridLinkedList();
             }
         }
@@ -915,11 +915,11 @@ class PointHashGrid {
     }
 
     calculateRKey(point) {
-        return Math.floor(point.getLatitude() / this.PIXELS_PER_BUCKET);
+        return point.getLatitude() < 0 ? 0 : Math.floor(point.getLatitude() / this.PIXELS_PER_BUCKET);
     }
 
     calculateCKey(point) {
-        return Math.floor(point.getLongitude() / this.PIXELS_PER_BUCKET);
+        return point.getLongitude() < 0 ? 0 : Math.floor(point.getLongitude() / this.PIXELS_PER_BUCKET);
     }
 
     isGridCellEmpty(r, c) {
@@ -929,8 +929,8 @@ class PointHashGrid {
     put(point) {
         let rKey = this.calculateRKey(point);
         let cKey = this.calculateCKey(point);
-
         this.grid[rKey][cKey].add(rKey, cKey, point);
+        this.size++;
     }
 
     contains(point) {
@@ -938,5 +938,11 @@ class PointHashGrid {
         let cKey = this.calculateCKey(point);
 
         return this.grid[rKey][cKey].hasPoint(point);
+    }
+    
+    putRoad(road) {
+        for (let [pointId, point] of road.points) {
+            this.put(point);
+        }
     }
 }
