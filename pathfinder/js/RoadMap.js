@@ -881,3 +881,62 @@ class MinDistanceHeap {
         return this.minDistanceHeap[0];
     }
 }
+class PointHashGrid {
+    constructor(map) {
+        this.PIXELS_PER_BUCKET = 5;
+        this.INTERSECTION_VALIDATION_RADIUS = 5;
+        this.INTERSECTION_SEARCH_TYPE = 0;
+        this.POINT_SEARCH_TYPE = 1;
+        this.size = 0;
+        this.numRows = this.calculateNumRows(map);
+        this.numColumns = this.calculateNumColumns(map);
+        this.grid = this.initializeGrid();
+    }
+
+    calculateNumRows(map) {
+        return Math.ceil(map.getWidth() / this.PIXELS_PER_BUCKET);
+    }
+
+    calculateNumColumns(map) {
+        return Math.ceil(map.getHeight() / this.PIXELS_PER_BUCKET);
+    }
+
+    initializeGrid() {
+        let grid = new Array();
+
+        for (let r = 0; r < this.numRows; r++) {
+            grid[r] = new Array();
+            for (let c = 0; c < this.numColumns; c++) {
+                grid[r][c] = new PointHashGridLinkedList();
+            }
+        }
+
+        return grid;
+    }
+
+    calculateRKey(point) {
+        return Math.floor(point.getLatitude() / this.PIXELS_PER_BUCKET);
+    }
+
+    calculateCKey(point) {
+        return Math.floor(point.getLongitude() / this.PIXELS_PER_BUCKET);
+    }
+
+    isGridCellEmpty(r, c) {
+        return this.grid[r][c].isEmpty();
+    }
+
+    put(point) {
+        let rKey = this.calculateRKey(point);
+        let cKey = this.calculateCKey(point);
+
+        this.grid[rKey][cKey].add(rKey, cKey, point);
+    }
+
+    contains(point) {
+        let rKey = this.calculateRKey(point);
+        let cKey = this.calculateCKey(point);
+
+        return this.grid[rKey][cKey].hasPoint(point);
+    }
+}
