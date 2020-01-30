@@ -52,3 +52,8 @@ __JL 1.9.2020__
 __JL 1.28.2020__
 - Add reference to containing road in points
 - Complete MinDistanceHeap class
+
+__JL 1.29.2020__
+- Partially complete PointHashGrid
+- Add complementary unit tests (test.js)
+- Fix function bugs
