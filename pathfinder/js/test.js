@@ -286,6 +286,116 @@ class TestPointHashGrid {
             console.log('FAIL');
         }
     }
+
+    static testPopulateMinDistanceheapsFromPointBFS() {
+        let mapWrapper = document.getElementById('map-wrapper');
+        let map = new RoadMap(mapWrapper.offsetWidth, mapWrapper.offsetHeight);
+        let phg = new PointHashGrid(map);
+        var two = new Two({width: mapWrapper.offsetWidth, height: mapWrapper.offsetHeight, type: Two.Types.canvas}).appendTo(mapWrapper);
+
+        map.generateRoad();
+        map.generateRoad();
+        map.generateRoad();
+        map.generateRoad();
+        map.generateRoad();
+        map.generateRoad();
+        map.generateRoad();
+
+        for (let [k, road] of map.roads) {
+            phg.putRoad(road);
+        }
+
+        map.generateRoad();
+
+        MapVisualizer.drawMap(two, map.roads);
+        let road2 = map.roads.get(7);
+
+        let minHeapArr = new Array();
+        let bfsQueue = new BFSQueue();
+
+        for (let point of road2.getConsecutivePoints()) {
+            let r = phg.calculateRKey(point);
+            let c = phg.calculateCKey(point);
+            if (!phg.isGridCellEmpty(r, c)) {
+                let visitedCells = BFSQueue.getInitializedVisitedCells(phg);
+                bfsQueue.enqueue(r, c);
+                phg.populateMinDistanceHeapsFromPointBFS(point, bfsQueue.getFront(), minHeapArr, phg.INTERSECTION_SEARCH_TYPE, bfsQueue, visitedCells, 1, 0, false);
+            }
+        }
+
+        console.log(minHeapArr);
+        for (var s of minHeapArr) {
+            let z = s.minDistanceHeap[0];
+            for (var [key, jp] of z.junctionPoints) {
+                let x = jp.point.getLatitude();
+                let y = jp.point.getLongitude();
+                let circle = two.makeCircle(x, y, 5);
+                circle.fill = "white";
+                circle.noStroke();
+                two.update();
+            }
+        }
+    }
+
+    static testGenerateMinDistanceHeapsFromRoad() {
+        let mapWrapper = document.getElementById('map-wrapper');
+        let map = new RoadMap(mapWrapper.offsetWidth, mapWrapper.offsetHeight);
+        let phg = new PointHashGrid(map);
+        var two = new Two({width: mapWrapper.offsetWidth, height: mapWrapper.offsetHeight, type: Two.Types.canvas}).appendTo(mapWrapper);
+
+        map.generateRoad();
+        map.generateRoad();
+
+        let road1 = map.roads.get(0);
+        let road2 = map.roads.get(1);
+
+        road1.isStartingCanvasEdge = true;
+        road1.isStartingCanvasEdge = true;
+        road1.canvasStartingEdge = 3;
+        road1.angle = 0;
+        road1.startingPoint = new Point(0, 0, 100, road1);
+        road1.bottomLeftPoint = road1.getBottomLeftPoint(map);
+        road1.bottomRightPoint = road1.getBottomRightPoint(map);
+        road1.topLeftPoint = road1.getTopLeftPoint(map);
+        road1.topRightPoint = road1.getTopRightPoint(map);
+        road1.maxDistance = road1.calculateMaxDistance();
+        road1.minDistance = road1.calculateMinDistance();
+        road1.distance = road1.getRandomDistance();
+        // TODO Change if supporting curved roads
+        road1.consecutivePoints = road1.generateStraightRoad(map);
+        road1.endPoint = road1.fetchEndPoint();
+        road1.points = road1.generatePointsMap();
+
+        road2.isStartingCanvasEdge = true;
+        road2.isStartingCanvasEdge = true;
+        road2.canvasStartingEdge = 3;
+        road2.angle = 0;
+        road2.startingPoint = new Point(1, 0, 200, road2);
+        road2.bottomLeftPoint = road2.getBottomLeftPoint(map);
+        road2.bottomRightPoint = road2.getBottomRightPoint(map);
+        road2.topLeftPoint = road2.getTopLeftPoint(map);
+        road2.topRightPoint = road2.getTopRightPoint(map);
+        road2.maxDistance = road2.calculateMaxDistance();
+        road2.minDistance = road2.calculateMinDistance();
+        road2.distance = road1.getRandomDistance();
+        // TODO Change if supporting curved roads
+        road2.consecutivePoints = road2.generateStraightRoad(map);
+        road2.endPoint = road2.fetchEndPoint();
+        road2.points = road2.generatePointsMap();
+
+        phg.putRoad(road1);
+        phg.putRoad(road2);
+
+        map.generateRoad();
+
+        let road3 = map.roads.get(2);
+
+        let mdha = phg.generateMinDistanceHeapsFromRoad(road3);
+
+        console.log(mdha);
+
+        MapVisualizer.drawMap(two, map.roads);
+    }
 }
 
 class TestBFSQueue {
@@ -408,5 +518,5 @@ class TestBFSQueue {
     }
 }
 
-//TestPointHashGrid.testPutRoad(100);
-TestBFSQueue.testIsCellValid();
+//TestPointHashGrid.testGenerateMinDistanceHeapsFromRoad();
+//TestBFSQueue.testIsCellValid();

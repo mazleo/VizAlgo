@@ -945,6 +945,120 @@ class PointHashGrid {
             this.put(point);
         }
     }
+
+    getComplementaryOrNewHeapIndex(point1, point2, minDistanceHeapArray) {
+        let index = 0;
+        while (minDistanceHeapArray[index] != undefined) {
+            if (minDistanceHeapArray[index].isComplementaryHeap(point1, point2)) {
+                return index;
+            }
+
+            index++;
+        }
+
+        return index;
+    }
+
+    populateMinDistanceHeapsFromPointBFS(point, currentBFSCell, minDistanceHeapArray, searchType, bfsQueue, visitedCells, currentRadius, traversalLevel, populatedCellFound) {
+        if (
+            searchType == this.INTERSECTION_SEARCH_TYPE
+            && traversalLevel == 2
+        ) {
+            return;
+        }
+        else if (
+            searchType == this.POINT_SEARCH_TYPE
+            && traversalLevel > 1
+            && populatedCellFound
+        ) {
+            return;
+        }
+        if (bfsQueue.isEmpty()) {
+            return;
+        }
+
+        visitedCells[currentBFSCell.r][currentBFSCell.c] = true;
+        bfsQueue.dequeue();
+
+        let currentLL = this.grid[currentBFSCell.r][currentBFSCell.c];
+        let pointPtr = currentLL.front;
+        while (pointPtr != null) {
+            let mhIndex = this.getComplementaryOrNewHeapIndex(point, pointPtr.point, minDistanceHeapArray);
+            if (minDistanceHeapArray[mhIndex] == undefined) {
+                minDistanceHeapArray[mhIndex] = new MinDistanceHeap(point, pointPtr.point);
+            }
+            minDistanceHeapArray[mhIndex].insert(point, pointPtr.point);
+
+            pointPtr = pointPtr.next;
+        }
+
+        let minR = currentBFSCell.r - currentRadius;
+        let maxR = currentBFSCell.r + currentRadius;
+        let minC = currentBFSCell.c - currentRadius;
+        let maxC = currentBFSCell.c + currentRadius;
+        let r = -1;
+        let c = -1;
+
+        populatedCellFound = false;
+
+        // Top edge
+        r = minR;
+        c = minC;
+        while (c <= maxC) {
+            if (BFSQueue.isCellValid(r, c, visitedCells) && !BFSQueue.isCellVisited(r, c, visitedCells) &&
+            !this.isGridCellEmpty(r, c)) {
+                bfsQueue.enqueue(r, c);
+                populatedCellFound = true;
+            }
+
+            c++;
+        }
+
+        // Right edge
+        c = maxC;
+        r = minR;
+        while (r <= maxR) {
+            if (BFSQueue.isCellValid(r, c, visitedCells) && !BFSQueue.isCellVisited(r, c, visitedCells) &&
+            !this.isGridCellEmpty(r, c)) {
+                bfsQueue.enqueue(r, c);
+                populatedCellFound = true;
+            }
+
+            r++;
+        }
+
+        // Bottom edge
+        r = maxR;
+        c = minC;
+        while (c <= maxC) {
+            if (BFSQueue.isCellValid(r, c, visitedCells)
+            && !BFSQueue.isCellVisited(r, c, visitedCells)
+            && !this.isGridCellEmpty(r, c)) {
+                bfsQueue.enqueue(r, c);
+                populatedCellFound = true;
+            }
+
+            c++;
+        }
+
+        // Left edge
+        c = minC;
+        r = minR;
+        while (r <= maxR) {
+            if (BFSQueue.isCellValid(r, c, visitedCells)
+            && !BFSQueue.isCellVisited(r, c, visitedCells)
+            && !this.isGridCellEmpty(r, c)) {
+                bfsQueue.enqueue(r, c);
+                populatedCellFound = true;
+            }
+
+            r++;
+        }
+
+        currentRadius++;
+        traversalLevel++;
+        this.populateMinDistanceHeapsFromPointBFS(point, bfsQueue.getFront(), minDistanceHeapArray, searchType, bfsQueue, visitedCells, currentRadius, traversalLevel, populatedCellFound);
+    }
 }
 
 class BFSCell {
@@ -1006,6 +1120,7 @@ class BFSQueue {
 
     dequeue() {
         this.front = this.front.next;
+        this.size--;
     }
 
     static getInitializedVisitedCells(phg) {
