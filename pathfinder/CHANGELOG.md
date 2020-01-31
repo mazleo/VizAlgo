@@ -57,3 +57,9 @@ __JL 1.29.2020__
 - Partially complete PointHashGrid
 - Add complementary unit tests (test.js)
 - Fix function bugs
+
+__JL 1.31.2020__
+- Complete BFSQueue
+- Complete generation of intersection mean heaps from point with bfs
+- Complete complementary unit tests
+- Fix queue size bug
