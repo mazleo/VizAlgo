@@ -237,23 +237,25 @@ class Road {
 
     constructor(id, map) {
         this.id = id;
-        this.isStartingCanvasEdge = this.isStartingCanvasEdge();
-        this.canvasStartingEdge = this.getRandomStartingEdge();
-        this.angle = this.getRandomAngle();
-        this.startingPoint = this.getRandomStartingPoint(map);
-        this.bottomLeftPoint = this.getBottomLeftPoint(map);
-        this.bottomRightPoint = this.getBottomRightPoint(map);
-        this.topLeftPoint = this.getTopLeftPoint(map);
-        this.topRightPoint = this.getTopRightPoint(map);
-        this.maxDistance = this.calculateMaxDistance();
-        this.minDistance = this.calculateMinDistance();
-        this.distance = this.getRandomDistance();
-        // TODO Change if supporting curved roads
-        this.consecutivePoints = this.generateStraightRoad(map);
-        this.endPoint = this.fetchEndPoint();
-        this.points = this.generatePointsMap();
-        this.intersections = null;
-        this.edges = null;
+        if (id > -1) {
+            this.isStartingCanvasEdge = this.isStartingCanvasEdge();
+            this.canvasStartingEdge = this.getRandomStartingEdge();
+            this.angle = this.getRandomAngle();
+            this.startingPoint = this.getRandomStartingPoint(map);
+            this.bottomLeftPoint = this.getBottomLeftPoint(map);
+            this.bottomRightPoint = this.getBottomRightPoint(map);
+            this.topLeftPoint = this.getTopLeftPoint(map);
+            this.topRightPoint = this.getTopRightPoint(map);
+            this.maxDistance = this.calculateMaxDistance();
+            this.minDistance = this.calculateMinDistance();
+            this.distance = this.getRandomDistance();
+            // TODO Change if supporting curved roads
+            this.consecutivePoints = this.generateStraightRoad(map);
+            this.endPoint = this.fetchEndPoint();
+            this.points = this.generatePointsMap();
+            this.intersections = null;
+            this.edges = null;
+        }
     }
 
     isStartingCanvasEdge() {
@@ -1058,6 +1060,35 @@ class PointHashGrid {
         currentRadius++;
         traversalLevel++;
         this.populateMinDistanceHeapsFromPointBFS(point, bfsQueue.getFront(), minDistanceHeapArray, searchType, bfsQueue, visitedCells, currentRadius, traversalLevel, populatedCellFound);
+
+    generateMinDistanceHeapsFromRoad(road) {
+        let minDistanceHeapArray = new Array();
+        let bfsQueue = new BFSQueue();
+        let visitedCells = BFSQueue.getInitializedVisitedCells(this);
+        for (var point of road.getConsecutivePoints()) {
+            let r = this.calculateRKey(point);
+            let c = this.calculateCKey(point);
+            if (!this.isGridCellEmpty(r, c)) {
+                bfsQueue.enqueue(r, c);
+                let currentBFSCell = bfsQueue.getFront();
+                this.populateMinDistanceHeapsFromPointBFS(point, currentBFSCell, minDistanceHeapArray, this.INTERSECTION_SEARCH_TYPE, bfsQueue, visitedCells, 1, 1, false);
+            }
+        }
+
+        return minDistanceHeapArray;
+    }
+
+    generateIntersectionsFromRoad(road) {
+        let minDistanceHeapArray = this.generateMinDistanceHeapsFromRoad(road);
+        let intersectionsArr = new Array();
+        for (var minHeap of minDistanceHeapArray) {
+            var int = minHeap.getMinDistanceIntersection();
+            if (int.getSeparationDistance() <= 5) {
+                intersectionsArr.push(int);
+            }
+        }
+
+        return intersectionsArr;
     }
 }
 
