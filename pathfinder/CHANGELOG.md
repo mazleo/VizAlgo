@@ -63,3 +63,11 @@ __JL 1.31.2020__
 - Complete generation of intersection mean heaps from point with bfs
 - Complete complementary unit tests
 - Fix queue size bug
+
+__JL 2.6.2020__
+- Finish generation of intersections from road
+- Create complementary tests
+
+__JL 2.7.2020__
+- Finish get closest point from map
+- Create complementary tests
