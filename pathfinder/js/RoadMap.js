@@ -1060,6 +1060,7 @@ class PointHashGrid {
         currentRadius++;
         traversalLevel++;
         this.populateMinDistanceHeapsFromPointBFS(point, bfsQueue.getFront(), minDistanceHeapArray, searchType, bfsQueue, visitedCells, currentRadius, traversalLevel, populatedCellFound);
+    }
 
     generateMinDistanceHeapsFromRoad(road) {
         let minDistanceHeapArray = new Array();
@@ -1089,6 +1090,113 @@ class PointHashGrid {
         }
 
         return intersectionsArr;
+    }
+
+    populateMinHeapClosestLocationBFS(point, currentBFSCell, bfsQueue, minHeapArr, radius, visitedCells, pointFound) {
+        if (bfsQueue.isEmpty()) {
+            return;
+        }
+
+        visitedCells[currentBFSCell.r][currentBFSCell.c] = true;
+        bfsQueue.dequeue();
+
+        let ll = this.grid[currentBFSCell.r][currentBFSCell.c];
+        let ptr = ll.front;
+        while (ptr != null) {
+            let mhIndex = this.getComplementaryOrNewHeapIndex(point, ptr.point, minHeapArr);
+            if (minHeapArr[mhIndex] == undefined) {
+                minHeapArr[mhIndex] = new MinDistanceHeap(point, ptr.point);
+            }
+            minHeapArr[mhIndex].insert(point, ptr.point);
+
+            ptr = ptr.next;
+        }
+
+        while (!pointFound) {
+            let pointR = this.calculateRKey(point);
+            let pointC = this.calculateCKey(point);
+
+            let minR = pointR - radius;
+            let maxR = pointR + radius;
+            let minC = pointC - radius;
+            let maxC = pointC + radius;
+
+            let r = -1;
+            let c = -1;
+
+            // Top edge
+            r = minR;
+            c = minC;
+            while (c <= maxC) {
+                if (BFSQueue.isCellValid(r, c, visitedCells) && !BFSQueue.isCellVisited(r, c, visitedCells) &&
+                !this.isGridCellEmpty(r, c)) {
+                    bfsQueue.enqueue(r, c);
+                    pointFound = true;
+                }
+
+                c++;
+            }
+
+            // Right edge
+            c = maxC;
+            r = minR;
+            while (r <= maxR) {
+                if (BFSQueue.isCellValid(r, c, visitedCells) && !BFSQueue.isCellVisited(r, c, visitedCells) &&
+                !this.isGridCellEmpty(r, c)) {
+                    bfsQueue.enqueue(r, c);
+                    pointFound = true;
+                }
+
+                r++;
+            }
+
+            // Bottom edge
+            r = maxR;
+            c = minC;
+            while (c <= maxC) {
+                if (BFSQueue.isCellValid(r, c, visitedCells)
+                && !BFSQueue.isCellVisited(r, c, visitedCells)
+                && !this.isGridCellEmpty(r, c)) {
+                    bfsQueue.enqueue(r, c);
+                    pointFound = true;
+                }
+
+                c++;
+            }
+
+            // Left edge
+            c = minC;
+            r = minR;
+            while (r <= maxR) {
+                if (BFSQueue.isCellValid(r, c, visitedCells)
+                && !BFSQueue.isCellVisited(r, c, visitedCells)
+                && !this.isGridCellEmpty(r, c)) {
+                    bfsQueue.enqueue(r, c);
+                    pointFound = true;
+                }
+
+                r++;
+            }
+
+            radius++;
+            this.populateMinHeapClosestLocationBFS(point, bfsQueue.getFront(), bfsQueue, minHeapArr, radius, visitedCells, pointFound);
+        }
+    }
+
+    getClosestPointFromLocation(latitude, longitude, map) {
+        let mousePoint = new Point(-1, latitude, longitude, new Road(-1, map));
+        let minHeapArr = new Array();
+        let bfsQueue = new BFSQueue();
+        bfsQueue.enqueue(this.calculateRKey(mousePoint), this.calculateCKey(mousePoint));
+        let currentBFSCell = bfsQueue.getFront();
+        let visitedCells = BFSQueue.getInitializedVisitedCells(this);
+        this.populateMinHeapClosestLocationBFS(mousePoint, currentBFSCell, bfsQueue, minHeapArr, 1, visitedCells, false);
+        let int = minHeapArr[0].getMinDistanceIntersection();
+        for (var [key, jp] of int.getJunctionPoints()) {
+            if (jp.getPoint().getId() != -1) {
+                return jp.getPoint();
+            }
+        }
     }
 }
 

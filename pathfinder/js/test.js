@@ -532,14 +532,12 @@ class TestPointHashGrid {
         MapVisualizer.drawMap(two, map.roads);
 
         mapWrapper.addEventListener('click', function(event) {
-            var mousePoint = new Point(-1, event.offsetX, event.offsetY, new Road(-1, map));
-            var minHeapArr = new Array();
-            var bfsQueue = new BFSQueue();
-            bfsQueue.enqueue(phg.calculateRKey(mousePoint), phg.calculateCKey(mousePoint));
-            var currentBFSCell = bfsQueue.getFront();
-            var visitedCells = BFSQueue.getInitializedVisitedCells(phg);
-            phg.populateMinDistanceHeapsFromPointBFS(mousePoint, currentBFSCell, minHeapArr, phg.POINT_SEARCH_TYPE, bfsQueue, visitedCells, 1, 1, false);
-            console.log(minHeapArr);
+            var closestPoint = phg.getClosestPointFromLocation(event.offsetX, event.offsetY, map);
+            var circle = two.makeCircle(closestPoint.getLatitude(), closestPoint.getLongitude(), 5);
+            circle.fill = "white";
+            circle.noStroke();
+
+            two.update();
         });
     }
 }
