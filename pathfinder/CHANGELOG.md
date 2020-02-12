@@ -71,3 +71,7 @@ __JL 2.6.2020__
 __JL 2.7.2020__
 - Finish get closest point from map
 - Create complementary tests
+
+__JL 2.12.2020__
+- Split files for maintainability
+- Complete road validation
