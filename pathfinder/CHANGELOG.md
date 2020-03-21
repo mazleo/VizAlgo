@@ -75,3 +75,7 @@ __JL 2.7.2020__
 __JL 2.12.2020__
 - Split files for maintainability
 - Complete road validation
+
+__JL 3.21.2020__
+- Fix intersections Map in Road
+- Implement alpha version of generateRoad
