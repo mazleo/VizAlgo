@@ -37,17 +37,20 @@ export default class RoadMap {
 
         newId = this.numOfRoads;
         newRoad = new Road(newId, this);
-        this.roads.set(newRoad.getId(), newRoad);
-        this.numOfRoads++;
+        
+        while (!this.isRoadValid(newRoad)) {
+            newRoad = new Road(newId, this);
+        }
 
-        /*
-        if (newRoad.id == 1) {
-            this.generateIntersectionsFromRoad(newRoad);
+        for (var int of this.generateIntersectionsFromRoad(newRoad)) {
+            // TODO change id
+            var newIntersectionId = this.intersections.size;
+            newRoad.intersections.set(newIntersectionId, int);
+            this.intersections.set(newIntersectionId, int);
         }
-        for (var point of newRoad.getConsecutivePoints()) {
-            this.points.set((point.getLatitude() + point.getLongitude()), point);
-        }
-        */
+        this.roads.set(newRoad.getId(), newRoad);
+        this.pointHashGrid.putRoad(newRoad);
+        this.numOfRoads++;
     }
 
     generateIntersectionsFromRoad(road) {
@@ -61,7 +64,6 @@ export default class RoadMap {
         for (var currIntersection of newIntersections) {
             for (var [key, int] of this.intersections) {
                 var distance = RoadMap.getDistanceBetweenIntersections(currIntersection, int);
-                console.log(distance);
                 if (distance < this.INTERSECTION_MIN_DISTANCE) {
                     isValid = false;
                 }

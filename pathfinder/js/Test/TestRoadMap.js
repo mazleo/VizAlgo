@@ -90,4 +90,18 @@ export default class TestRoadMap {
 
         console.log(map.isRoadValid(road3));
     }
+
+    static testGenerateRoad() {
+        let mapWrapper = document.getElementById('map-wrapper');
+        let map = new RoadMap(mapWrapper.offsetWidth, mapWrapper.offsetHeight);
+        var two = new Two({width: mapWrapper.offsetWidth, height: mapWrapper.offsetHeight, type: Two.Types.canvas}).appendTo(mapWrapper);
+
+        for (var m = 0; m < 20; m++) {
+            map.generateRoad();
+        }
+
+        MapVisualizer.drawMap(two, map.roads);
+
+        console.log(map);
+    }
 }

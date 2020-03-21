@@ -42,7 +42,7 @@ export default class Road {
             this.consecutivePoints = this.generateStraightRoad(map);
             this.endPoint = this.fetchEndPoint();
             this.points = this.generatePointsMap();
-            this.intersections = null;
+            this.intersections = new Map();
             this.edges = null;
         }
     }
