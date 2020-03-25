@@ -6,8 +6,8 @@ import PointHashGridLinkedList from './PointHashGridLinkedList.js';
 
 export default class PointHashGrid {
     constructor(map) {
-        this.PIXELS_PER_BUCKET = 5;
-        this.INTERSECTION_VALIDATION_RADIUS = 5;
+        this.PIXELS_PER_BUCKET = 20;
+        this.INTERSECTION_VALIDATION_RADIUS = 20;
         this.INTERSECTION_SEARCH_TYPE = 0;
         this.POINT_SEARCH_TYPE = 1;
         this.size = 0;
@@ -64,7 +64,10 @@ export default class PointHashGrid {
     }
     
     putRoad(road) {
-        for (let [pointId, point] of road.points) {
+        // for (var [pointId, point] of road.points) {
+            // this.put(point);
+        // }
+        for (var point of road.getConsecutivePoints()) {
             this.put(point);
         }
     }
@@ -85,7 +88,7 @@ export default class PointHashGrid {
     populateMinDistanceHeapsFromPointBFS(point, currentBFSCell, minDistanceHeapArray, searchType, bfsQueue, visitedCells, currentRadius, traversalLevel, populatedCellFound) {
         if (
             searchType == this.INTERSECTION_SEARCH_TYPE
-            && traversalLevel == 2
+            && traversalLevel == 5
         ) {
             return;
         }
@@ -97,6 +100,9 @@ export default class PointHashGrid {
             return;
         }
         if (bfsQueue.isEmpty()) {
+            return;
+        }
+        if (!BFSQueue.isCellValid(currentBFSCell.r, currentBFSCell.c, visitedCells)) {
             return;
         }
 
@@ -128,8 +134,9 @@ export default class PointHashGrid {
         r = minR;
         c = minC;
         while (c <= maxC) {
-            if (BFSQueue.isCellValid(r, c, visitedCells) && !BFSQueue.isCellVisited(r, c, visitedCells) &&
-            !this.isGridCellEmpty(r, c)) {
+            if (BFSQueue.isCellValid(r, c, visitedCells) 
+            && !BFSQueue.isCellVisited(r, c, visitedCells) 
+            && !this.isGridCellEmpty(r, c)) {
                 bfsQueue.enqueue(r, c);
                 populatedCellFound = true;
             }
@@ -141,8 +148,9 @@ export default class PointHashGrid {
         c = maxC;
         r = minR;
         while (r <= maxR) {
-            if (BFSQueue.isCellValid(r, c, visitedCells) && !BFSQueue.isCellVisited(r, c, visitedCells) &&
-            !this.isGridCellEmpty(r, c)) {
+            if (BFSQueue.isCellValid(r, c, visitedCells) 
+            && !BFSQueue.isCellVisited(r, c, visitedCells) 
+            && !this.isGridCellEmpty(r, c)) {
                 bfsQueue.enqueue(r, c);
                 populatedCellFound = true;
             }

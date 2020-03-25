@@ -23,10 +23,10 @@ export default class Intersection {
     }
 
     calculateSeparationDistance() {
-        if (this.junctionPoints.length <= 1) {
+        if (this.junctionPoints.size <= 1) {
             this.separationDistance = 0;
         }
-        else if (this.junctionPoints.length == 2) {
+        else if (this.junctionPoints.size == 2) {
             let j = 0;
             let tempJuncArray = new Array();
 

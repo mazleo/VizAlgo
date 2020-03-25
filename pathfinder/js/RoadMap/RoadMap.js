@@ -12,7 +12,7 @@ import PointHashGrid from './PointHashGrid.js';
 
 export default class RoadMap {
     constructor(width, height) {
-        this.INTERSECTION_MIN_DISTANCE = 100;
+        this.INTERSECTION_MIN_DISTANCE = 200;
         this.width = width;
         this.height = height;
         this.numOfPoints = 0;
