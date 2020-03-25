@@ -79,3 +79,9 @@ __JL 2.12.2020__
 __JL 3.21.2020__
 - Fix intersections Map in Road
 - Implement alpha version of generateRoad
+
+__JL 3.25.2020__
+- Fix intersection separation distance bug
+- Increase intersection validation distance
+- Increase intersection bfs travel
+- Fix BFS valid cell bug
