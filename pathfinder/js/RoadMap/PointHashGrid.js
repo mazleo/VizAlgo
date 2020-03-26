@@ -213,7 +213,7 @@ export default class PointHashGrid {
         let intersectionsArr = new Array();
         for (var minHeap of minDistanceHeapArray) {
             var int = minHeap.getMinDistanceIntersection();
-            if (int.getSeparationDistance() <= 5) {
+            if (int.getSeparationDistance() <= this.INTERSECTION_VALIDATION_RADIUS) {
                 intersectionsArr.push(int);
             }
         }

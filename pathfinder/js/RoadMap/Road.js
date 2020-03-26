@@ -5,7 +5,6 @@ import Edge from './Edge.js';
 import RoadMap from './RoadMap.js';
 
 export default class Road {
-    STARTING_EDGE_PROB = 0.8;
     TOP_STARTING_EDGE = 0;
     RIGHT_STARTING_EDGE = 1;
     BOTTOM_STARTING_EDGE = 2;
@@ -20,147 +19,25 @@ export default class Road {
     BOTTOM_EDGE_UPPER_BOUND_ANGLE = 359;
     ANGLE_LOWER_BOUND = 0;
     ANGLE_UPPER_BOUND = 359;
-    MAX_DISTANCE_PROB = 0.8;
-    MID_DISTANCE_PROB = 0.15;
-    MIN_DISTANCE_PROB = 0.05;
 
-    constructor(id, map) {
+    constructor(id, canvasStartingEdge, canvasEndingEdge, angle, startingPoint, map) {
         this.id = id;
         if (id > -1) {
-            this.isStartingCanvasEdge = this.isStartingCanvasEdge();
-            this.canvasStartingEdge = this.getRandomStartingEdge();
-            this.angle = this.getRandomAngle();
-            this.startingPoint = this.getRandomStartingPoint(map);
+            this.canvasStartingEdge = canvasStartingEdge;
+            this.canvasEndingEdge = canvasEndingEdge;
+            this.angle = angle;
+            this.startingPoint = startingPoint;
             this.bottomLeftPoint = this.getBottomLeftPoint(map);
             this.bottomRightPoint = this.getBottomRightPoint(map);
             this.topLeftPoint = this.getTopLeftPoint(map);
             this.topRightPoint = this.getTopRightPoint(map);
-            this.maxDistance = this.calculateMaxDistance();
-            this.minDistance = this.calculateMinDistance();
-            this.distance = this.getRandomDistance();
-            // TODO Change if supporting curved roads
+            this.distance = this.calculateDistance();
             this.consecutivePoints = this.generateStraightRoad(map);
             this.endPoint = this.fetchEndPoint();
             this.points = this.generatePointsMap();
             this.intersections = new Map();
             this.edges = null;
         }
-    }
-
-    isStartingCanvasEdge() {
-        var randomNum = Math.random();
-        return randomNum <= this.STARTING_EDGE_PROB ? true : false;
-    }
-
-    getRandomStartingEdge() {
-        if (!this.isStartingCanvasEdge) {
-            return null;
-        }
-        else {
-            return Math.floor(Math.random() * 4);
-        }
-    }
-
-    getRandomAngle() {
-        var randomAngle = 0;
-        if (this.isStartingCanvasEdge) {
-            switch(this.canvasStartingEdge) {
-                case this.TOP_STARTING_EDGE:
-                    randomAngle = Math.floor(Math.random() * this.getTopEdgeAngleRange()) + this.getTopEdgeAngleOffset();
-                    break;
-                case this.RIGHT_STARTING_EDGE:
-                    randomAngle = Math.floor(Math.random() * this.getRightEdgeAngleRange()) + this.getRightEdgeAngleOffset();
-                    break;
-                case this.BOTTOM_STARTING_EDGE:
-                    randomAngle = Math.floor(Math.random() * this.getBottomEdgeAngleRange()) + this.getBottomEdgeAngleOffset();
-                    break;
-                case this.LEFT_STARTING_EDGE:
-                    randomAngle = Math.floor(Math.random() * this.getLeftEdgeAngleRange()) + this.getLeftEdgeAngleOffset();
-                    break;
-            }
-        }
-        else {
-            randomAngle = Math.floor(Math.random() * this.getContainedAngleRange()) + this.getContainedAngleOffset();
-        }
-
-        return randomAngle;
-    }
-
-    getTopEdgeAngleRange() {
-        return this.TOP_EDGE_UPPER_BOUND_ANGLE - (this.TOP_EDGE_LOWER_BOUND_ANGLE - 1);
-    }
-
-    getRightEdgeAngleRange() {
-        return this.RIGHT_EDGE_UPPER_BOUND_ANGLE - (this.RIGHT_EDGE_LOWER_BOUND_ANGLE - 1);
-    }
-
-    getLeftEdgeAngleRange() {
-        return this.LEFT_EDGE_UPPER_BOUND_ANGLE - (this.LEFT_EDGE_LOWER_BOUND_ANGLE - 1);
-    }
-
-    getBottomEdgeAngleRange() {
-        return this.BOTTOM_EDGE_UPPER_BOUND_ANGLE - (this.BOTTOM_EDGE_LOWER_BOUND_ANGLE - 1);
-    }
-
-    getContainedAngleRange() {
-        return this.ANGLE_UPPER_BOUND - (this.ANGLE_LOWER_BOUND - 1);
-    }
-
-    getTopEdgeAngleOffset() {
-        return this.TOP_EDGE_LOWER_BOUND_ANGLE;
-    }
-
-    getRightEdgeAngleOffset() {
-        return this.RIGHT_EDGE_LOWER_BOUND_ANGLE;
-    }
-
-    getLeftEdgeAngleOffset() {
-        return this.LEFT_EDGE_LOWER_BOUND_ANGLE;
-    }
-
-    getBottomEdgeAngleOffset() {
-        return this.BOTTOM_EDGE_LOWER_BOUND_ANGLE;
-    }
-
-    getContainedAngleOffset() {
-        return this.ANGLE_LOWER_BOUND;
-    }
-
-    getRandomStartingPoint(map) {
-        var xLowerBound = 0;
-        var yLowerBound = 0;
-        var xUpperBound = map.width;
-        var yUpperBound = map.height;
-
-        var x = 0;
-        var y = 0;
-        if (this.isStartingCanvasEdge) {
-            switch (this.canvasStartingEdge) {
-                case this.TOP_STARTING_EDGE:
-                    y = 0;
-                    x = Math.random() * xUpperBound;
-                    break;
-                case this.LEFT_STARTING_EDGE:
-                    x = 0;
-                    y = Math.random() * yUpperBound;
-                    break;
-                case this.RIGHT_STARTING_EDGE:
-                    x = xUpperBound;
-                    y = Math.random() * yUpperBound;
-                    break;
-                case this.BOTTOM_STARTING_EDGE:
-                    y = yUpperBound;
-                    x = Math.random() * xUpperBound;
-                    break;
-            }
-        }
-        else {
-            x = Math.random() * xUpperBound;
-            y = Math.random() * yUpperBound;
-        }
-
-        var newPointId = map.numOfPoints;
-        return new Point(newPointId, x, y, this);
     }
 
     getBottomLeftPoint(map) {
@@ -179,87 +56,66 @@ export default class Road {
         return new Point(-1, map.width, 0, null);
     }
 
-    calculateMaxDistance() {
-        var maxDistance = null;
+    calculateDistance() {
+        var distance = null;
         var x = null;
         var y = null;
         var angleBounds = null;
 
         angleBounds = this.getAngleBounds();
-        if (this.isStartingCanvasEdge) {
-            switch (this.canvasStartingEdge) {
+        switch (this.canvasStartingEdge) {
+            case this.LEFT_STARTING_EDGE:
+                if (this.angle <= angleBounds.angleBound1) {
+                    y = this.startingPoint.getLongitude();
+                }
+                else if (this.angle <= angleBounds.angleBound2) {
+                    x = this.bottomRightPoint.getLatitude();
+                }
+                else {
+                    y = this.bottomRightPoint.getLongitude() - this.startingPoint.getLongitude();
+                }
+                break;
 
-                case this.LEFT_STARTING_EDGE:
-                    if (this.angle <= angleBounds.angleBound1) {
-                        y = this.startingPoint.getLongitude();
-                    }
-                    else if (this.angle <= angleBounds.angleBound2) {
-                        x = this.bottomRightPoint.getLatitude();
-                    }
-                    else {
-                        y = this.bottomRightPoint.getLongitude() - this.startingPoint.getLongitude();
-                    }
-                    break;
+            case this.TOP_STARTING_EDGE:
+                if (this.angle <= angleBounds.angleBound1) {
+                    x = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
+                }
+                else if (this.angle <= angleBounds.angleBound2) {
+                    y = this.bottomLeftPoint.getLongitude();
+                }
+                else {
+                    x = this.startingPoint.getLatitude();
+                }
+                break;
 
-                case this.TOP_STARTING_EDGE:
-                    if (this.angle <= angleBounds.angleBound1) {
-                        x = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
-                    }
-                    else if (this.angle <= angleBounds.angleBound2) {
-                        y = this.bottomLeftPoint.getLongitude();
-                    }
-                    else {
-                        x = this.startingPoint.getLatitude();
-                    }
-                    break;
+            case this.RIGHT_STARTING_EDGE:
+                if (this.angle <= angleBounds.angleBound1) {
+                    y = this.bottomLeftPoint.getLongitude() - this.startingPoint.getLongitude();
+                }
+                else if (this.angle <= angleBounds.angleBound2) {
+                    x = this.startingPoint.getLatitude();
+                }
+                else {
+                    y = this.startingPoint.getLongitude();
+                }
+                break;
 
-                case this.RIGHT_STARTING_EDGE:
-                    if (this.angle <= angleBounds.angleBound1) {
-                        y = this.bottomLeftPoint.getLongitude() - this.startingPoint.getLongitude();
-                    }
-                    else if (this.angle <= angleBounds.angleBound2) {
-                        x = this.startingPoint.getLatitude();
-                    }
-                    else {
-                        y = this.startingPoint.getLongitude();
-                    }
-                    break;
-
-                case this.BOTTOM_STARTING_EDGE:
-                    if (this.angle <= angleBounds.angleBound1) {
-                        x = this.startingPoint.getLatitude();
-                    }
-                    else if (this.angle <= angleBounds.angleBound2) {
-                        y = this.startingPoint.getLongitude();
-                    }
-                    else {
-                        x = this.topRightPoint.getLatitude() - this.startingPoint.getLatitude();
-                    }
-                    break;
-            }
+            case this.BOTTOM_STARTING_EDGE:
+                if (this.angle <= angleBounds.angleBound1) {
+                    x = this.startingPoint.getLatitude();
+                }
+                else if (this.angle <= angleBounds.angleBound2) {
+                    y = this.startingPoint.getLongitude();
+                }
+                else {
+                    x = this.topRightPoint.getLatitude() - this.startingPoint.getLatitude();
+                }
+                break;
         }
 
-        else {
-            if (this.angle <= angleBounds.angleBound1) {
-                x = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
-            }
-            else if (this.angle <= angleBounds.angleBound2) {
-                y = this.bottomLeftPoint.getLongitude() - this.startingPoint.getLongitude();
-            }
-            else if (this.angle <= angleBounds.angleBound3) {
-                x = this.startingPoint.getLatitude();
-            }
-            else if (this.angle <= angleBounds.angleBound4) {
-                y = this.startingPoint.getLongitude();
-            }
-            else {
-                x = this.topRightPoint.getLatitude() - this.startingPoint.getLatitude();
-            }
-        }
+        distance = x != null ? (x / Math.cos(this.getRadFromDegree(this.angle))) : (y / Math.sin(this.getRadFromDegree(this.angle)));
 
-        maxDistance = x != null ? (x / Math.cos(this.getRadFromDegree(this.angle))) : (y / Math.sin(this.getRadFromDegree(this.angle)));
-
-        return Math.ceil(Math.abs(maxDistance));
+        return Math.ceil(Math.abs(distance));
     }
 
     getAngleBounds() {
@@ -268,79 +124,56 @@ export default class Road {
         var angleBound3 = null;
         var angleBound4 = null;
 
-        if (this.isStartingCanvasEdge) {
-            switch (this.canvasStartingEdge) {
+        switch (this.canvasStartingEdge) {
 
-                case this.LEFT_STARTING_EDGE:
-                    var xDist = this.topRightPoint.getLatitude();
-                    var yDist = -1 * this.startingPoint.getLongitude();
-                    var angleBound1Rad = Math.atan(yDist / xDist);
-                    angleBound1 = this.getDegreeFromRad(angleBound1Rad);
+            case this.LEFT_STARTING_EDGE:
+                var xDist = this.topRightPoint.getLatitude();
+                var yDist = -1 * this.startingPoint.getLongitude();
+                var angleBound1Rad = Math.atan(yDist / xDist);
+                angleBound1 = this.getDegreeFromRad(angleBound1Rad);
 
-                    xDist = this.bottomRightPoint.getLatitude();
-                    yDist = this.bottomRightPoint.getLongitude() - this.startingPoint.getLongitude();
-                    var angleBound2Rad = Math.atan(yDist / xDist);
-                    angleBound2 = this.getDegreeFromRad(angleBound2Rad);
-                    break;
+                xDist = this.bottomRightPoint.getLatitude();
+                yDist = this.bottomRightPoint.getLongitude() - this.startingPoint.getLongitude();
+                var angleBound2Rad = Math.atan(yDist / xDist);
+                angleBound2 = this.getDegreeFromRad(angleBound2Rad);
+                break;
 
-                case this.TOP_STARTING_EDGE:
-                    var xDist = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
-                    var yDist = this.bottomRightPoint.getLongitude();
-                    var angleBound1Rad = Math.atan(yDist / xDist);
-                    angleBound1 = this.getDegreeFromRad(angleBound1Rad);
+            case this.TOP_STARTING_EDGE:
+                var xDist = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
+                var yDist = this.bottomRightPoint.getLongitude();
+                var angleBound1Rad = Math.atan(yDist / xDist);
+                angleBound1 = this.getDegreeFromRad(angleBound1Rad);
 
-                    xDist = this.startingPoint.getLatitude();
-                    yDist = this.bottomLeftPoint.getLongitude();
-                    var diffAngleBound2Rad = Math.atan(yDist / xDist);
-                    var diffAngleBound2 = this.getDegreeFromRad(diffAngleBound2Rad);
-                    angleBound2 = 180 - diffAngleBound2;
-                    break;
+                xDist = this.startingPoint.getLatitude();
+                yDist = this.bottomLeftPoint.getLongitude();
+                var diffAngleBound2Rad = Math.atan(yDist / xDist);
+                var diffAngleBound2 = this.getDegreeFromRad(diffAngleBound2Rad);
+                angleBound2 = 180 - diffAngleBound2;
+                break;
 
-                case this.RIGHT_STARTING_EDGE:
-                    var xDist = this.startingPoint.getLatitude();
-                    var yDist = this.bottomLeftPoint.getLongitude() - this.startingPoint.getLongitude();
-                    var angleBound1Rad = Math.atan(xDist / yDist);
-                    angleBound1 = this.getDegreeFromRad(angleBound1Rad) + 90;
+            case this.RIGHT_STARTING_EDGE:
+                var xDist = this.startingPoint.getLatitude();
+                var yDist = this.bottomLeftPoint.getLongitude() - this.startingPoint.getLongitude();
+                var angleBound1Rad = Math.atan(xDist / yDist);
+                angleBound1 = this.getDegreeFromRad(angleBound1Rad) + 90;
 
-                    xDist = this.startingPoint.getLatitude();
-                    yDist = this.startingPoint.getLongitude();
-                    var additionAngleBound2Rad = Math.atan(yDist / xDist);
-                    angleBound2 = this.getDegreeFromRad(additionAngleBound2Rad) + 180;
-                    break;
+                xDist = this.startingPoint.getLatitude();
+                yDist = this.startingPoint.getLongitude();
+                var additionAngleBound2Rad = Math.atan(yDist / xDist);
+                angleBound2 = this.getDegreeFromRad(additionAngleBound2Rad) + 180;
+                break;
 
-                case this.BOTTOM_STARTING_EDGE:
-                    var xDist = this.startingPoint.getLatitude();
-                    var yDist = this.startingPoint.getLongitude();
-                    var additionAngleBound1Rad = Math.atan(yDist / xDist);
-                    angleBound1 = this.getDegreeFromRad(additionAngleBound1Rad) + 180;
+            case this.BOTTOM_STARTING_EDGE:
+                var xDist = this.startingPoint.getLatitude();
+                var yDist = this.startingPoint.getLongitude();
+                var additionAngleBound1Rad = Math.atan(yDist / xDist);
+                angleBound1 = this.getDegreeFromRad(additionAngleBound1Rad) + 180;
 
-                    xDist = this.topRightPoint.getLatitude() - this.startingPoint.getLatitude();
-                    yDist = this.startingPoint.getLongitude();
-                    var additionAngleBound2Rad = Math.atan(xDist / yDist);
-                    angleBound2 = this.getDegreeFromRad(additionAngleBound2Rad) + 270;
-                    break;
-            }
-        }
-        else {
-            var xDist = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
-            var yDist = this.bottomRightPoint.getLongitude() - this.startingPoint.getLongitude();
-            var angleBoundRad = Math.atan(yDist/xDist);
-            angleBound1 = this.getDegreeFromRad(angleBoundRad);
-
-            xDist = this.startingPoint.getLatitude();
-            yDist = this.bottomLeftPoint.getLongitude() - this.startingPoint.getLongitude();
-            angleBoundRad = Math.atan(xDist/yDist);
-            angleBound2 = this.getDegreeFromRad(angleBoundRad) + 90;
-
-            xDist = this.startingPoint.getLatitude();
-            yDist = this.startingPoint.getLongitude();
-            angleBoundRad = Math.atan(yDist/xDist);
-            angleBound3 = this.getDegreeFromRad(angleBoundRad) + 180;
-
-            xDist = this.topRightPoint.getLatitude() - this.startingPoint.getLatitude();
-            yDist = this.startingPoint.getLongitude();
-            angleBoundRad = Math.atan(xDist/yDist);
-            angleBound4 = this.getDegreeFromRad(angleBoundRad) + 270;
+                xDist = this.topRightPoint.getLatitude() - this.startingPoint.getLatitude();
+                yDist = this.startingPoint.getLongitude();
+                var additionAngleBound2Rad = Math.atan(xDist / yDist);
+                angleBound2 = this.getDegreeFromRad(additionAngleBound2Rad) + 270;
+                break;
         }
 
         return {angleBound1: angleBound1, angleBound2: angleBound2, angleBound3: angleBound3, angleBound4: angleBound4};
@@ -352,25 +185,6 @@ export default class Road {
 
     getRadFromDegree(degree) {
         return (degree * Math.PI) / 180;
-    }
-
-    calculateMinDistance() {
-        return Math.ceil(this.maxDistance * 0.75);
-    }
-
-    getRandomDistance() {
-        var randomNum = Math.random();
-        if (randomNum <= this.MAX_DISTANCE_PROB) {
-            return this.maxDistance;
-        }
-        else if (randomNum <= this.MAX_DISTANCE_PROB + this.MID_DISTANCE_PROB) {
-            var range = this.maxDistance - this.minDistance;
-            var randomNumInRange = Math.floor(Math.random() * range);
-            return randomNumInRange + this.minDistance;
-        }
-        else {
-            return this.minDistance;
-        }
     }
 
     generateStraightRoad() {
@@ -442,10 +256,6 @@ export default class Road {
         return this.id;
     }
 
-    getIsStartingCanvasEdge() {
-        return this.isStartingCanvasEdge;
-    }
-
     getCanvasStartingEdge() {
         return this.canvasStartingEdge;
     }
@@ -456,14 +266,6 @@ export default class Road {
 
     getStartingPoint() {
         return this.startingPoint;
-    }
-
-    getMaxDistance() {
-        return this.maxDistance;
-    }
-
-    getMinDistance() {
-        return this.minDistance;
     }
 
     getDistance() {
