@@ -85,3 +85,6 @@ __JL 3.25.2020__
 - Increase intersection validation distance
 - Increase intersection bfs travel
 - Fix BFS valid cell bug
+
+__JL 3.26.2020__
+- Partially redo logic of RoadMap and Road
