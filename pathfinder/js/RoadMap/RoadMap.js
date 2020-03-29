@@ -231,7 +231,9 @@ export default class RoadMap {
                 this.setRoadPoints(newRoad);
                 this.roads.set(newRoad.id, newRoad);
                 this.pointHashGrid.putRoad(newRoad);
-                this.setIntersectionsFromArray(this.generateIntersectionsFromRoad(newRoad));
+                var newRoadIntersections = this.generateIntersectionsFromRoad(newRoad);
+                this.setIntersectionsFromArray(newRoadIntersections);
+                RoadMap.setRoadIntersectionsFromArray(newRoadIntersections);
 
                 startingPoint = RoadMap.getNextStartingPoint(startingPoint.getLatitude(), startingPoint.getLongitude(), startingEdge, endingEdge, angle, this); 
             } while (startingPoint != null);
@@ -442,6 +444,7 @@ export default class RoadMap {
     setIntersectionsFromArray(intersectionArray) {
         for (var intersection of intersectionArray) {
             var key = this.intersections.size;
+            intersection.setId(key);
             this.intersections.set(key, intersection);
         }
     }
@@ -491,5 +494,15 @@ export default class RoadMap {
 
     static getMinNum(n1, n2) {
         return n1 < n2 ? n1 : n2;
+    }
+
+    static setRoadIntersectionsFromArray(intersections) {
+        for (var intersection of intersections) {
+            for (var [jpKey, junctionPoint] of intersection.getJunctionPoints()) {
+                var point = junctionPoint.getPoint();
+                var road = point.getContainingRoad();
+                road.addIntersection(intersection.getId(), intersection);
+            }
+        }
     }
 }

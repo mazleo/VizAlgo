@@ -322,4 +322,8 @@ export default class Road {
     setEdges(edges) {
         this.edges = edges;
     }
+
+    addIntersection(key, intersection) {
+        this.intersections.set(key, intersection);
+    }
 }

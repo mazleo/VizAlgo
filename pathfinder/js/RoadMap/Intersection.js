@@ -2,6 +2,7 @@ export default class Intersection {
     constructor() {
         this.junctionPoints = new Map();
         this.separationDistance = 0;
+        this.id = -1;
     }
     
     hasJunctionPoint(junctionPoint) {
@@ -56,5 +57,13 @@ export default class Intersection {
 
     getSeparationDistance() {
         return this.separationDistance;
+    }
+
+    setId(id) {
+        this.id = id;
+    }
+
+    getId() {
+        return this.id;
     }
 }
