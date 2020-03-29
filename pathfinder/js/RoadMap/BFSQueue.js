@@ -80,4 +80,14 @@ export default class BFSQueue {
 
         return isValid;
     }
+
+    static resetVisitedCells(visitedCells) {
+        for (var r = 0; r < visitedCells.length; r++) {
+            for (var c = 0; c < visitedCells[r].length; c++) {
+                visitedCells[r][c] = false;
+            }
+        }
+
+        return visitedCells;
+    }
 }

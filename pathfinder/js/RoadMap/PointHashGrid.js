@@ -6,8 +6,8 @@ import PointHashGridLinkedList from './PointHashGridLinkedList.js';
 
 export default class PointHashGrid {
     constructor(map) {
-        this.PIXELS_PER_BUCKET = 200;
-        this.INTERSECTION_VALIDATION_RADIUS = 40;
+        this.PIXELS_PER_BUCKET = 50;
+        this.INTERSECTION_VALIDATION_RADIUS = 10;
         this.INTERSECTION_SEARCH_TYPE = 0;
         this.POINT_SEARCH_TYPE = 1;
         this.size = 0;
@@ -85,18 +85,8 @@ export default class PointHashGrid {
         return index;
     }
 
-    populateMinDistanceHeapsFromPointBFS(point, currentBFSCell, minDistanceHeapArray, searchType, bfsQueue, visitedCells, currentRadius, traversalLevel, populatedCellFound) {
-        if (
-            searchType == this.INTERSECTION_SEARCH_TYPE
-            && traversalLevel == 5
-        ) {
-            return;
-        }
-        else if (
-            searchType == this.POINT_SEARCH_TYPE
-            && traversalLevel > 1
-            && populatedCellFound
-        ) {
+    populateMinDistanceHeapsFromPointBFS(point, currentBFSCell, minDistanceHeapArray, bfsQueue, visitedCells, currentRadius, traversalLevel) {
+        if (traversalLevel == 5) {
             return;
         }
         if (bfsQueue.isEmpty()) {
@@ -130,8 +120,6 @@ export default class PointHashGrid {
         let r = -1;
         let c = -1;
 
-        populatedCellFound = false;
-
         // Top edge
         r = minR;
         c = minC;
@@ -140,7 +128,6 @@ export default class PointHashGrid {
             && !BFSQueue.isCellVisited(r, c, visitedCells) 
             && !this.isGridCellEmpty(r, c)) {
                 bfsQueue.enqueue(r, c);
-                populatedCellFound = true;
             }
 
             c++;
@@ -154,7 +141,6 @@ export default class PointHashGrid {
             && !BFSQueue.isCellVisited(r, c, visitedCells) 
             && !this.isGridCellEmpty(r, c)) {
                 bfsQueue.enqueue(r, c);
-                populatedCellFound = true;
             }
 
             r++;
@@ -168,7 +154,6 @@ export default class PointHashGrid {
             && !BFSQueue.isCellVisited(r, c, visitedCells)
             && !this.isGridCellEmpty(r, c)) {
                 bfsQueue.enqueue(r, c);
-                populatedCellFound = true;
             }
 
             c++;
@@ -182,7 +167,6 @@ export default class PointHashGrid {
             && !BFSQueue.isCellVisited(r, c, visitedCells)
             && !this.isGridCellEmpty(r, c)) {
                 bfsQueue.enqueue(r, c);
-                populatedCellFound = true;
             }
 
             r++;
@@ -190,7 +174,7 @@ export default class PointHashGrid {
 
         currentRadius++;
         traversalLevel++;
-        this.populateMinDistanceHeapsFromPointBFS(point, bfsQueue.getFront(), minDistanceHeapArray, searchType, bfsQueue, visitedCells, currentRadius, traversalLevel, populatedCellFound);
+        this.populateMinDistanceHeapsFromPointBFS(point, bfsQueue.getFront(), minDistanceHeapArray, bfsQueue, visitedCells, currentRadius, traversalLevel);
     }
 
     static calcPointsDistance(point1, point2) {
@@ -208,11 +192,13 @@ export default class PointHashGrid {
             let r = this.calculateRKey(point);
             let c = this.calculateCKey(point);
             if (!this.isGridCellEmpty(r, c)) {
+                visitedCells = BFSQueue.resetVisitedCells(visitedCells);
+                bfsQueue = new BFSQueue();
                 // console.log('POPULATED GRID CELL');
                 //console.log(r + ', ' + c);
                 bfsQueue.enqueue(r, c);
                 let currentBFSCell = bfsQueue.getFront();
-                this.populateMinDistanceHeapsFromPointBFS(point, currentBFSCell, minDistanceHeapArray, this.INTERSECTION_SEARCH_TYPE, bfsQueue, visitedCells, 1, 1, false);
+                this.populateMinDistanceHeapsFromPointBFS(point, currentBFSCell, minDistanceHeapArray, bfsQueue, visitedCells, 1, 1);
             }
         }
 
