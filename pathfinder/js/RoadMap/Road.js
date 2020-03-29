@@ -36,7 +36,9 @@ export default class Road {
             this.consecutivePoints = this.generateStraightRoad(map);
             this.endPoint = this.fetchEndPoint();
             this.points = this.generatePointsMap();
+            this.consecutiveIntersections = new Array();
             this.intersections = new Map();
+            this.consecutiveEdges = new Array();
             this.edges = null;
         }
     }
@@ -323,7 +325,43 @@ export default class Road {
         this.edges = edges;
     }
 
+    setConsecutiveEdges(edgesArray) {
+        this.consecutiveEdges = edgesArray;
+    }
+
+    setConsecutiveIntersections(intersections) {
+        this.consecutiveIntersections = intersections;
+    }
+
     addIntersection(key, intersection) {
         this.intersections.set(key, intersection);
+    }
+
+    getConsecutiveIntersections() {
+        return this.consecutiveIntersections;
+    }
+
+    getIntersectionFromPoint(point) {
+        for (var [key, intersection] of this.intersections) {
+            if (intersection.hasPoint(point)) {
+                return intersection;
+            }
+        }
+
+        return null;
+    }
+
+    isStartPoint(point) {
+        if (this.startingPoint.getId() == point.getId()) {
+            return true;
+        }
+        return false;
+    }
+
+    isEndPoint(point) {
+        if (this.endPoint.getId() == point.getId()) {
+            return true;
+        }
+        return false;
     }
 }

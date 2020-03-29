@@ -66,4 +66,14 @@ export default class Intersection {
     getId() {
         return this.id;
     }
+
+    hasPoint(point) {
+        for (var [key, jp] of this.junctionPoints) {
+            if (jp.isPointEqual(point)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

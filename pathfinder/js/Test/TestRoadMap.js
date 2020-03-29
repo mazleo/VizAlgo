@@ -10,6 +10,7 @@ import Intersection from '../RoadMap/Intersection.js';
 import Edge from '../RoadMap/Edge.js';
 import Road from '../RoadMap/Road.js';
 import RoadMap from '../RoadMap/RoadMap.js';
+import MapVisualizer from '../MapVisualizer.js';
 
 export default class TestRoadMap {
     static testConstructor() {
@@ -93,5 +94,35 @@ export default class TestRoadMap {
         //console.log(map.roads.get(1).getConsecutivePoints());
         //MapVisualizer.drawPointsInRoad(two, map.roads.get(1));
         //MapVisualizer.drawPoints(two, map.points);
+    }
+
+    static testGenerateEdgesFromRoad() {
+        let mapWrapper = document.getElementById('map-wrapper');
+        let map = new RoadMap(mapWrapper.offsetWidth, mapWrapper.offsetHeight);
+        var two = new Two({width: mapWrapper.offsetWidth, height: mapWrapper.offsetHeight, type: Two.Types.canvas}).appendTo(mapWrapper);
+
+        map.generateRoadCollection();
+        console.log(map);
+
+        /*
+        var numRoads = map.roads.size;
+        var randomRoadIndex = Math.floor(Math.random() * numRoads);
+        var randomRoad = map.roads.get(randomRoadIndex);
+
+        var edges = RoadMap.generateEdgesArrayFromRoad(randomRoad, map);
+        console.log(edges);
+        var numEdges = edges.length;
+        var randomEdgeIndex = Math.floor(Math.random() * numEdges);
+        var randomEdge = edges[randomEdgeIndex];
+        */
+
+        MapVisualizer.drawMap(two, map.roads);
+        MapVisualizer.drawIntersections(two, map.intersections);
+        //MapVisualizer.drawEdges(two, map.edges);
+
+        mapWrapper.addEventListener('click', function(event) {
+            console.log(event.offsetX);
+            console.log(event.offsetY);
+        });
     }
 }

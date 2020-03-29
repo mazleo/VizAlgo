@@ -1,7 +1,7 @@
 export default class Edge {
-    constructor(id, intersections, consecutivePoints) {
+    constructor(id, endPoints, consecutivePoints) {
         this.id = id;
-        this.intersections = intersections;
+        this.endPoints = endPoints;
         this.consecutivePoints = consecutivePoints;
         this.distance = consecutivePoints.length - 1;
         this.points = this.generatePointsMap();
@@ -26,7 +26,7 @@ export default class Edge {
 
     generatePointsKeyValuePairFromPoint(point) {
         var keyValuePair = new Array();
-        keyValuePair[0] = point.getLatitude() + point.getLongitude();
+        keyValuePair[0] = point.getId();
         keyValuePair[1] = point;
 
         return keyValuePair;
@@ -36,8 +36,8 @@ export default class Edge {
         return this.id;
     }
 
-    getIntersections() {
-        return this.intersections;
+    getEndPoints() {
+        return this.endPoints;
     }
 
     getConsecutivePoints() {
@@ -56,8 +56,8 @@ export default class Edge {
         this.id = id;
     }
 
-    setIntersections(intersections) {
-        this.intersections = intersections;
+    setEndPoints(endPoints) {
+        this.endPoints = endPoints;
     }
 
     setConsecutivePoints(consecutivePoints) {
@@ -74,11 +74,11 @@ export default class Edge {
         this.points = this.generatePointsMap();
     }
 
+    /*
     getPointFromLocation(latitude, longitude) {
         return this.points.get(latitude + longitude);
     }
 
-    /*
     getIntersection(point) {
         if (this.intersections[0].equalsPoint(point)) {
             return this.intersections[0];
@@ -102,7 +102,6 @@ export default class Edge {
     */
 
     hasPoint(point) {
-        var targetPoint = this.points.get(point.getLatitude() + point.getLongitude());
-        return targetPoint != null && targetPoint.equals(point) ? true : false;
+        return this.points.has(point.getId());
     }
 }

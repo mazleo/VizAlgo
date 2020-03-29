@@ -49,6 +49,7 @@ export default class RoadMap {
         this.roads = new Map();
         this.intersections = new Map();
         this.pointHashGrid = new PointHashGrid(this);
+        this.edges = new Map();
     }
 
     getRandomStartingEdge() {
@@ -234,9 +235,18 @@ export default class RoadMap {
                 var newRoadIntersections = this.generateIntersectionsFromRoad(newRoad);
                 this.setIntersectionsFromArray(newRoadIntersections);
                 RoadMap.setRoadIntersectionsFromArray(newRoadIntersections);
+                RoadMap.setRoadConsecutiveIntersectionsFromArray(newRoadIntersections);
 
                 startingPoint = RoadMap.getNextStartingPoint(startingPoint.getLatitude(), startingPoint.getLongitude(), startingEdge, endingEdge, angle, this); 
             } while (startingPoint != null);
+
+            for (var [roadKey, road] of this.roads) {
+                var edgesArrayFromRoad = RoadMap.generateEdgesArrayFromRoad(road, this);
+                var edgesMap = RoadMap.generateEdgesMapFromArray(edgesArrayFromRoad);
+                this.setEdgesFromArray(edgesArrayFromRoad);
+                road.setConsecutiveEdges(edgesArrayFromRoad);
+                road.setEdges(edgesMap);
+            }
         }
     }
 
@@ -504,5 +514,78 @@ export default class RoadMap {
                 road.addIntersection(intersection.getId(), intersection);
             }
         }
+    }
+
+    static setRoadConsecutiveIntersectionsFromArray(intersections) {
+        for (var intersection of intersections) {
+            for (var [jpKey, junctionPoint] of intersection.getJunctionPoints()) {
+                var point = junctionPoint.getPoint();
+                var road = point.getContainingRoad();
+                road.consecutiveIntersections.push(intersection);
+            }
+        }
+    }
+
+    static generateEdgesArrayFromRoad(road, map) {
+        let edgesArray = new Array();
+
+        var startNew = true;
+        var startWithIntersection;
+        var id = map.edges.size;
+        for (var point of road.getConsecutivePoints()) {
+            if (startNew) {
+                startNew = false;
+                var edgeId = map.edges.size;
+                var edgePoints = new Array();
+                var endPoints = new Array();
+                if (startWithIntersection) {
+                    endPoints.push(intersection);
+                }
+            }
+
+            edgePoints.push(point);
+            var intersection = map.getIntersectionFromPoint(point);
+            if (
+                intersection != null
+                || road.isStartPoint(point)
+                || road.isEndPoint(point)
+            ) {
+                endPoints.push(intersection != null ? intersection : point);
+                startWithIntersection = intersection != null ? true : false;
+
+                if (endPoints.length == 2) {
+                    startNew = true;
+                    edgesArray.push(new Edge(id, endPoints, edgePoints));
+                    id++;
+                }
+            }
+        }
+
+        return edgesArray;
+    }
+
+    getIntersectionFromPoint(point) {
+        for (var [key, intersection] of this.intersections) {
+            if (intersection.hasPoint(point)) {
+                return intersection;
+            }
+        }
+
+        return null;
+    }
+
+    setEdgesFromArray(edgesArray) {
+        for (var edge of edgesArray) {
+            this.edges.set(edge.getId(), edge);
+        }
+    }
+
+    static generateEdgesMapFromArray(edgesArray) {
+        let edgesMap = new Map();
+        for (var edge of edgesArray) {
+            edgesMap.set(edge.getId(), edge);
+        }
+
+        return edgesMap;
     }
 }

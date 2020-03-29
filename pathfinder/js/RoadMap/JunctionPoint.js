@@ -4,6 +4,15 @@ export default class JunctionPoint {
         this.road = road;
     }
 
+    isPointEqual(point) {
+        if (point.getId() == this.point.getId()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     getPoint() {
         return this.point;
     }
