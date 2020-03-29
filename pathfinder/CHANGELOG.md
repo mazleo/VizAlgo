@@ -88,3 +88,10 @@ __JL 3.25.2020__
 
 __JL 3.26.2020__
 - Partially redo logic of RoadMap and Road
+
+__JL 3.28.2020__
++ Finish redoing logic for road generation
+    - Refactor Point
+    - Refactor Road
+    - Refactor RoadMap
+- Add appropriate tests
