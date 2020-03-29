@@ -1,9 +1,9 @@
 export default class Point {
-    constructor(id, latitude, longitude, containingRoad) {
+    constructor(id, latitude, longitude) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.containingRoad = containingRoad;
+        this.containingRoad = null;
     }
 
     getId() {
@@ -20,6 +20,10 @@ export default class Point {
 
     getContainingRoad() {
         return this.containingRoad;
+    }
+
+    setContainingRoad(containingRoad) {
+        this.containingRoad = containingRoad;
     }
 
     equals(point) {

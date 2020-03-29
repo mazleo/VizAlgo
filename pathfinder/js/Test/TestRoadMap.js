@@ -70,4 +70,24 @@ export default class TestRoadMap {
             console.log('r: ' + Math.floor(event.offsetX / 20) + ', c: ' + Math.floor(event.offsetY / 20));
         })
     }
+
+    static testNextStartingPoint() {
+        let mapWrapper = document.getElementById('map-wrapper');
+        let map = new RoadMap(mapWrapper.offsetWidth, mapWrapper.offsetHeight);
+        var two = new Two({width: mapWrapper.offsetWidth, height: mapWrapper.offsetHeight, type: Two.Types.canvas}).appendTo(mapWrapper);
+
+        let newPoint = RoadMap.getNextStartingPoint(100, 0, RoadMap.TOP_STARTING_EDGE, RoadMap.LEFT_STARTING_EDGE, 45, map);
+        console.log(newPoint);
+    }
+
+    static testGenerateRoadCollection() {
+        let mapWrapper = document.getElementById('map-wrapper');
+        let map = new RoadMap(mapWrapper.offsetWidth, mapWrapper.offsetHeight);
+        var two = new Two({width: mapWrapper.offsetWidth, height: mapWrapper.offsetHeight, type: Two.Types.canvas}).appendTo(mapWrapper);
+
+        map.generateRoadCollection();
+        console.log(map);
+
+        MapVisualizer.drawMap(two, map.roads);
+    }
 }

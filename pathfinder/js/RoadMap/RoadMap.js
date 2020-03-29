@@ -11,26 +11,26 @@ import PointHashGridLinkedList from './PointHashGridLinkedList.js';
 import PointHashGrid from './PointHashGrid.js';
 
 export default class RoadMap {
-    TOP_STARTING_EDGE = 0;
-    LEFT_STARTING_EDGE = 1;
-    BOTTOM_STARTING_EDGE = 2;
-    RIGHT_STARTING_EDGE = 3;
-    LEFT_EDGE_LOWER_BOUND_ANGLE = -89;
-    LEFT_EDGE_MID_ANGLE = 0;
-    LEFT_EDGE_UPPER_BOUND_ANGLE = 89;
-    TOP_EDGE_LOWER_BOUND_ANGLE = 1;
-    TOP_EDGE_MID_ANGLE = 90;
-    TOP_EDGE_UPPER_BOUND_ANGLE = 179;
-    RIGHT_EDGE_LOWER_BOUND_ANGLE = 91;
-    RIGHT_EDGE_MID_ANGLE = 180;
-    RIGHT_EDGE_UPPER_BOUND_ANGLE = 269;
-    BOTTOM_EDGE_LOWER_BOUND_ANGLE = 181;
-    BOTTOM_EDGE_MID_ANGLE = 270;
-    BOTTOM_EDGE_UPPER_BOUND_ANGLE = 359;
-    ANGLE_LOWER_BOUND = 0;
-    ANGLE_UPPER_BOUND = 359;
-    ROAD_MIN_SEPARATION_DISTANCE = 50;
-    ROAD_MAX_SEPARATION_DISTANCE = 150;
+    static TOP_STARTING_EDGE = 0;
+    static LEFT_STARTING_EDGE = 1;
+    static BOTTOM_STARTING_EDGE = 2;
+    static RIGHT_STARTING_EDGE = 3;
+    static LEFT_EDGE_LOWER_BOUND_ANGLE = -89;
+    static LEFT_EDGE_MID_ANGLE = 0;
+    static LEFT_EDGE_UPPER_BOUND_ANGLE = 89;
+    static TOP_EDGE_LOWER_BOUND_ANGLE = 1;
+    static TOP_EDGE_MID_ANGLE = 90;
+    static TOP_EDGE_UPPER_BOUND_ANGLE = 179;
+    static RIGHT_EDGE_LOWER_BOUND_ANGLE = 91;
+    static RIGHT_EDGE_MID_ANGLE = 180;
+    static RIGHT_EDGE_UPPER_BOUND_ANGLE = 269;
+    static BOTTOM_EDGE_LOWER_BOUND_ANGLE = 181;
+    static BOTTOM_EDGE_MID_ANGLE = 270;
+    static BOTTOM_EDGE_UPPER_BOUND_ANGLE = 359;
+    static ANGLE_LOWER_BOUND = 0;
+    static ANGLE_UPPER_BOUND = 359;
+    static ROAD_MIN_SEPARATION_DISTANCE = 50;
+    static ROAD_MAX_SEPARATION_DISTANCE = 150;
 
     constructor(width, height) {
         this.INTERSECTION_MIN_DISTANCE = 200;
@@ -40,11 +40,11 @@ export default class RoadMap {
         this.numOfRoads = 0;
         this.points = new Map();
         this.firstStartingEdge = this.getRandomStartingEdge();
-        this.firstAngle = this.getRandomAngle(this.firstStartingEdge);
-        this.firstEndingEdge = this.getEndingEdge(this.firstStartingEdge, this.firstAngle);
+        this.firstEndingEdge = this.getEndingEdge(this.firstStartingEdge);
         this.secondStartingEdge = this.getRandomStartingEdge();
-        this.secondAngle = this.getRandomAngle(this.secondStartingEdge);
-        this.secondEndingEdge = this.getEndingEdge(this.secondStartingEdge, this.secondAngle);
+        this.secondEndingEdge = this.getEndingEdge(this.secondStartingEdge);
+        this.firstAngle = RoadMap.getRandomAngle(this.firstStartingEdge, this.firstEndingEdge, false, null);
+        this.secondAngle = RoadMap.getRandomAngle(this.secondStartingEdge, this.secondEndingEdge, true, this.firstAngle);
         this.roadSeparationDistance = this.getRandomRoadSeparationDistance();
         this.roads = new Map();
         this.intersections = new Map();
@@ -55,51 +55,61 @@ export default class RoadMap {
         return Math.floor(Math.random() * 2);
     }
 
-    getRandomAngle(startingEdge) {
+    static getRandomAngle(startingEdge, endingEdge, isSecond, firstAngle) {
         var randomAngle = 0;
-        switch(startingEdge) {
-            case this.TOP_STARTING_EDGE:
-                randomAngle = Math.floor(Math.random() * this.getTopEdgeAngleRange()) + this.getTopEdgeAngleOffset();
-                break;
-            case this.LEFT_STARTING_EDGE:
-                randomAngle = Math.floor(Math.random() * this.getLeftEdgeAngleRange()) + this.getLeftEdgeAngleOffset();
-                break;
-            /*
-            case this.RIGHT_STARTING_EDGE:
-                randomAngle = Math.floor(Math.random() * this.getRightEdgeAngleRange()) + this.getRightEdgeAngleOffset();
-                break;
-            case this.BOTTOM_STARTING_EDGE:
-                randomAngle = Math.floor(Math.random() * this.getBottomEdgeAngleRange()) + this.getBottomEdgeAngleOffset();
-                break;
-            */
-        }
+        do {
+            switch(startingEdge) {
+                case RoadMap.TOP_STARTING_EDGE:
+                    switch (endingEdge) {
+                        case RoadMap.LEFT_STARTING_EDGE:
+                            var range = 89;
+                            var offset = 1;
+                            randomAngle = Math.floor(Math.random() * range) + offset;
+                            break;
+                        case RoadMap.RIGHT_STARTING_EDGE:
+                            var range = 89;
+                            var offset = 91;
+                            randomAngle = Math.floor(Math.random() * range) + offset;
+                            break;
+                    }
+                    break;
+                case RoadMap.LEFT_STARTING_EDGE:
+                    switch (endingEdge) {
+                        case RoadMap.TOP_STARTING_EDGE:
+                            var range = 89;
+                            var offset = 1;
+                            randomAngle = Math.floor(Math.random() * range) + offset;
+                            break;
+                        case RoadMap.BOTTOM_STARTING_EDGE:
+                            var range = 89;
+                            var offset = 271;
+                            randomAngle = Math.floor(Math.random() * range) + offset;
+                            break;
+                    }
+                    break;
+                /*
+                case this.RIGHT_STARTING_EDGE:
+                    randomAngle = Math.floor(Math.random() * this.getRightEdgeAngleRange()) + this.getRightEdgeAngleOffset();
+                    break;
+                case this.BOTTOM_STARTING_EDGE:
+                    randomAngle = Math.floor(Math.random() * this.getBottomEdgeAngleRange()) + this.getBottomEdgeAngleOffset();
+                    break;
+                */
+            }
+        } while (isSecond && RoadMap.getMinAngleDiff(firstAngle, randomAngle) < 45)
 
         return randomAngle;
     }
 
-    getEndingEdge(startingEdge, angle) {
+    getEndingEdge(startingEdge) {
+        var e = Math.floor(Math.random() * 2);
+        var endingEdge = null;
         switch (startingEdge) {
-            case this.TOP_STARTING_EDGE:
-                if (angle < this.TOP_EDGE_MID_ANGLE) {
-                    return this.LEFT_STARTING_EDGE;
-                }
-                else if (angle == this.TOP_EDGE_MID_ANGLE) {
-                    return null;
-                }
-                else if (angle > this.TOP_EDGE_MID_ANGLE) {
-                    return this.RIGHT_STARTING_EDGE;
-                }
+            case RoadMap.TOP_STARTING_EDGE:
+                endingEdge = e == 0 ? RoadMap.LEFT_STARTING_EDGE : RoadMap.RIGHT_STARTING_EDGE;
                 break;
-            case this.LEFT_STARTING_EDGE:
-                if (angle < this.LEFT_EDGE_MID_ANGLE) {
-                    return this.BOTTOM_STARTING_EDGE;
-                }
-                else if (angle == this.LEFT_EDGE_MID_ANGLE) {
-                    return null;
-                }
-                else if (angle > this.LEFT_EDGE_MID_ANGLE) {
-                    return this.TOP_STARTING_EDGE;
-                }
+            case RoadMap.LEFT_STARTING_EDGE:
+                endingEdge = e == 0 ? RoadMap.TOP_STARTING_EDGE : RoadMap.BOTTOM_STARTING_EDGE;
                 break;
             /*
             case this.RIGHT_STARTING_EDGE:
@@ -126,46 +136,48 @@ export default class RoadMap {
                 break;
             */
         }
+
+        return endingEdge;
     }
 
     getTopEdgeAngleRange() {
-        return this.TOP_EDGE_UPPER_BOUND_ANGLE - (this.TOP_EDGE_LOWER_BOUND_ANGLE - 1);
+        return RoadMap.TOP_EDGE_UPPER_BOUND_ANGLE - (RoadMap.TOP_EDGE_LOWER_BOUND_ANGLE - 1);
     }
 
     getRightEdgeAngleRange() {
-        return this.RIGHT_EDGE_UPPER_BOUND_ANGLE - (this.RIGHT_EDGE_LOWER_BOUND_ANGLE - 1);
+        return RoadMap.RIGHT_EDGE_UPPER_BOUND_ANGLE - (RoadMap.RIGHT_EDGE_LOWER_BOUND_ANGLE - 1);
     }
 
     getLeftEdgeAngleRange() {
-        return this.LEFT_EDGE_UPPER_BOUND_ANGLE - (this.LEFT_EDGE_LOWER_BOUND_ANGLE - 1);
+        return RoadMap.LEFT_EDGE_UPPER_BOUND_ANGLE - (RoadMap.LEFT_EDGE_LOWER_BOUND_ANGLE - 1);
     }
 
     getBottomEdgeAngleRange() {
-        return this.BOTTOM_EDGE_UPPER_BOUND_ANGLE - (this.BOTTOM_EDGE_LOWER_BOUND_ANGLE - 1);
+        return RoadMap.BOTTOM_EDGE_UPPER_BOUND_ANGLE - (RoadMap.BOTTOM_EDGE_LOWER_BOUND_ANGLE - 1);
     }
 
     getContainedAngleRange() {
-        return this.ANGLE_UPPER_BOUND - (this.ANGLE_LOWER_BOUND - 1);
+        return RoadMap.ANGLE_UPPER_BOUND - (RoadMap.ANGLE_LOWER_BOUND - 1);
     }
 
     getTopEdgeAngleOffset() {
-        return this.TOP_EDGE_LOWER_BOUND_ANGLE;
+        return RoadMap.TOP_EDGE_LOWER_BOUND_ANGLE;
     }
 
     getRightEdgeAngleOffset() {
-        return this.RIGHT_EDGE_LOWER_BOUND_ANGLE;
+        return RoadMap.RIGHT_EDGE_LOWER_BOUND_ANGLE;
     }
 
     getLeftEdgeAngleOffset() {
-        return this.LEFT_EDGE_LOWER_BOUND_ANGLE;
+        return RoadMap.LEFT_EDGE_LOWER_BOUND_ANGLE;
     }
 
     getBottomEdgeAngleOffset() {
-        return this.BOTTOM_EDGE_LOWER_BOUND_ANGLE;
+        return RoadMap.BOTTOM_EDGE_LOWER_BOUND_ANGLE;
     }
 
     getContainedAngleOffset() {
-        return this.ANGLE_LOWER_BOUND;
+        return RoadMap.ANGLE_LOWER_BOUND;
     }
 
     getWidth() {
@@ -177,26 +189,217 @@ export default class RoadMap {
     }
 
     getRandomRoadSeparationDistance() {
-        let range = this.ROAD_MAX_SEPARATION_DISTANCE - this.ROAD_MIN_SEPARATION_DISTANCE;
+        let range = RoadMap.ROAD_MAX_SEPARATION_DISTANCE - RoadMap.ROAD_MIN_SEPARATION_DISTANCE;
         let randomNumInRange = Math.floor(Math.random() * range);
 
-        return randomNumInRange + this.ROAD_MIN_SEPARATION_DISTANCE;
+        return randomNumInRange + RoadMap.ROAD_MIN_SEPARATION_DISTANCE;
     }
 
     generateRoadCollection() {
+        for (var v = 0; v < 2; v++) {
+            var startingPoint = null;
+            var startingEdge = v == 0 ? this.firstStartingEdge : this.secondStartingEdge;
+            var endingEdge = v == 0 ? this.firstEndingEdge : this.secondEndingEdge;
+            var angle = v == 0 ? this.firstAngle : this.secondAngle;
+            var startingX = -1;
+            var startingY = -1;
 
+            if (startingEdge == RoadMap.TOP_STARTING_EDGE && endingEdge == RoadMap.LEFT_STARTING_EDGE) {
+                startingX = this.width;
+                startingY = 0;
+            }
+            else if (startingEdge == RoadMap.TOP_STARTING_EDGE && endingEdge == RoadMap.RIGHT_STARTING_EDGE) {
+                startingX = 0;
+                startingY = 0;
+            }
+            else if (startingEdge == RoadMap.LEFT_STARTING_EDGE && endingEdge == RoadMap.TOP_STARTING_EDGE) {
+                startingX = 0;
+                startingY = this.height;
+            }
+            else if (startingEdge == RoadMap.LEFT_STARTING_EDGE && endingEdge == RoadMap.BOTTOM_STARTING_EDGE) {
+                startingX = 0;
+                startingY = 0;
+            }
+
+            startingPoint = RoadMap.getNextStartingPoint(startingX, startingY, startingEdge, endingEdge, angle, this);
+
+            do {
+                var newRoadId = this.roads.size;
+                var newRoad = new Road(newRoadId, startingEdge, endingEdge, angle, startingPoint, this);
+
+                for (var point of newRoad.getConsecutivePoints()) {
+                    this.points.set(point.id, point);
+                }
+
+                this.roads.set(newRoad.id, newRoad);
+
+                startingPoint = RoadMap.getNextStartingPoint(startingPoint.getLatitude(), startingPoint.getLongitude(), startingEdge, endingEdge, angle, this); 
+            } while (startingPoint != null);
+        }
     }
 
-    static getNextStartingPoint(prevLatitude, prevLongitude, startingEdge, angle) {
+    static getNextStartingPoint(prevLatitude, prevLongitude, startingEdge, endingEdge, angle, map) {
         let perpendicularAngle = RoadMap.getPerpendicularAngle(startingEdge, angle);
+        let newStartingPoint = null;
+
+        if (startingEdge == RoadMap.TOP_STARTING_EDGE && endingEdge == RoadMap.LEFT_STARTING_EDGE) {
+            let newLatitude = -1;
+            let newLongitude = -1;
+            let xOffset = -1;
+            let yOffset = 0;
+
+            if (prevLatitude > 0) {
+                xOffset = Math.abs(map.roadSeparationDistance / Math.cos(RoadMap.getRadFromDegree(180 - perpendicularAngle)));
+
+                newLatitude = prevLatitude - xOffset;
+                newLongitude = 0;
+
+                if (newLatitude < 0) {
+                    newLatitude = 0;
+
+                    yOffset = Math.abs(Math.tan(RoadMap.getRadFromDegree(angle)) * (xOffset - prevLatitude));
+                    newLongitude = yOffset;
+                }
+
+                let newPointId = map.points.size;
+                newStartingPoint = new Point(newPointId, newLatitude, newLongitude);
+            }
+            else {
+                yOffset = Math.abs(map.roadSeparationDistance / Math.cos(RoadMap.getRadFromDegree(perpendicularAngle - 90)));
+                newLongitude = prevLongitude + yOffset;
+                newLatitude = 0;
+
+                let newPointId = map.points.size;
+
+                if (newLongitude < map.height) {
+                    newStartingPoint = new Point(newPointId, newLatitude, newLongitude);
+                }
+                else {
+                    newStartingPoint = null;
+                }
+            }
+        }
+        else if (startingEdge == RoadMap.TOP_STARTING_EDGE && endingEdge == RoadMap.RIGHT_STARTING_EDGE) {
+            let newLatitude = -1;
+            let newLongitude = -1;
+            let xOffset = -1;
+            let yOffset = 0;
+
+            if (prevLatitude < map.width) {
+                xOffset = Math.abs(map.roadSeparationDistance / Math.cos(RoadMap.getRadFromDegree(perpendicularAngle)));
+
+                newLatitude = prevLatitude + xOffset;
+                newLongitude = 0;
+
+                if (newLatitude > map.width) {
+                    newLatitude = map.width;
+
+                    yOffset = Math.abs(Math.tan(RoadMap.getRadFromDegree(180 - angle)) * (xOffset - (map.width - prevLatitude)));
+                    newLongitude = yOffset;
+                }
+
+                let newPointId = map.points.size;
+                newStartingPoint = new Point(newPointId, newLatitude, newLongitude);
+            }
+            else {
+                yOffset = Math.abs(map.roadSeparationDistance / Math.cos(RoadMap.getRadFromDegree(90 - perpendicularAngle)));
+                newLongitude = prevLongitude + yOffset;
+                newLatitude = map.width;
+
+                let newPointId = map.points.size;
+
+                if (newLongitude < map.height) {
+                    newStartingPoint = new Point(newPointId, newLatitude, newLongitude);
+                }
+                else {
+                    newStartingPoint = null;
+                }
+            }
+        }
+        else if (startingEdge == RoadMap.LEFT_STARTING_EDGE && endingEdge == RoadMap.TOP_STARTING_EDGE) {
+            let newLatitude = -1;
+            let newLongitude = -1;
+            let xOffset = 0;
+            let yOffset = 0;
+
+            if (prevLongitude > 0) {
+                yOffset = Math.abs(map.roadSeparationDistance / Math.cos(RoadMap.getRadFromDegree(-90 - perpendicularAngle)));
+
+                newLatitude = 0;
+                newLongitude = prevLongitude - yOffset;
+
+                if (newLongitude < 0) {
+                    newLongitude = 0;
+
+                    xOffset = Math.abs(Math.tan(RoadMap.getRadFromDegree(90 - angle)) * (yOffset - prevLongitude));
+                    newLatitude = xOffset;
+                }
+
+                let newPointId = map.points.size;
+                newStartingPoint = new Point(newPointId, newLatitude, newLongitude);
+            }
+            else {
+                xOffset = Math.abs(map.roadSeparationDistance / Math.cos(RoadMap.getRadFromDegree(perpendicularAngle)));
+                newLatitude = prevLatitude + xOffset;
+                newLongitude = 0;
+
+                let newPointId = map.points.size;
+
+                if (newLatitude < map.width) {
+                    newStartingPoint = new Point(newPointId, newLatitude, newLongitude);
+                }
+                else {
+                    newStartingPoint = null;
+                }
+            }
+        }
+        else if (startingEdge == RoadMap.LEFT_STARTING_EDGE && endingEdge == RoadMap.BOTTOM_STARTING_EDGE) {
+            let newLatitude = -1;
+            let newLongitude = -1;
+            let xOffset = 0;
+            let yOffset = 0;
+
+            if (prevLongitude < map.height) {
+                yOffset = Math.abs(map.roadSeparationDistance / Math.cos(RoadMap.getRadFromDegree(90 - perpendicularAngle)));
+
+                newLatitude = 0;
+                newLongitude = prevLongitude + yOffset;
+
+                if (newLongitude > map.height) {
+                    newLongitude = map.height
+
+                    xOffset = Math.abs(Math.tan(RoadMap.getRadFromDegree(-90 - angle)) * (yOffset - (map.height - prevLongitude)));
+                    newLatitude = xOffset;
+                }
+
+                let newPointId = map.points.size;
+                newStartingPoint = new Point(newPointId, newLatitude, newLongitude);
+            }
+            else {
+                xOffset = Math.abs(map.roadSeparationDistance / Math.cos(RoadMap.getRadFromDegree(perpendicularAngle)));
+                newLatitude = prevLatitude + xOffset;
+                newLongitude = map.height;
+
+                let newPointId = map.points.size;
+
+                if (newLatitude < map.width) {
+                    newStartingPoint = new Point(newPointId, newLatitude, newLongitude);
+                }
+                else {
+                    newStartingPoint = null;
+                }
+            }
+        }
+
+        return newStartingPoint;
     }
 
     static getPerpendicularAngle(startingEdge, angle) {
         let angleAddition = 0;
 
         if (
-            (startingEdge == this.TOP_STARTING_EDGE && (angle < this.TOP_EDGE_MID_ANGLE))
-            || (startingEdge == this.LEFT_STARTING_EDGE && (angle < this.LEFT_EDGE_MID_ANGLE))
+            (startingEdge == RoadMap.TOP_STARTING_EDGE && (angle < RoadMap.TOP_EDGE_MID_ANGLE))
+            || (startingEdge == RoadMap.LEFT_STARTING_EDGE && (angle < RoadMap.LEFT_EDGE_MID_ANGLE))
             /*
             || (startingEdge == this.RIGHT_STARTING_EDGE && (angle < this.RIGHT_EDGE_MID_ANGLE))
             || (startingEdge == this.BOTTOM_STARTING_EDGE && (angle < this.BOTTOM_EDGE_MID_ANGLE))
@@ -205,8 +408,8 @@ export default class RoadMap {
             angleAddition = 90;
         }
         else if (
-            (startingEdge == this.TOP_STARTING_EDGE && (angle > this.TOP_EDGE_MID_ANGLE))
-            || (startingEdge == this.LEFT_STARTING_EDGE && (angle > this.LEFT_EDGE_MID_ANGLE))
+            (startingEdge == RoadMap.TOP_STARTING_EDGE && (angle > RoadMap.TOP_EDGE_MID_ANGLE))
+            || (startingEdge == RoadMap.LEFT_STARTING_EDGE && (angle > RoadMap.LEFT_EDGE_MID_ANGLE))
             /*
             || (startingEdge == this.RIGHT_STARTING_EDGE && (angle > this.RIGHT_EDGE_MID_ANGLE))
             || (startingEdge == this.BOTTOM_STARTING_EDGE && (angle > this.BOTTOM_EDGE_MID_ANGLE))
@@ -216,6 +419,14 @@ export default class RoadMap {
         }
 
         return angle + angleAddition;
+    }
+
+    static getDegreeFromRad(rad) {
+        return (rad * 180) / Math.PI;
+    }
+
+    static getRadFromDegree(degree) {
+        return (degree * Math.PI) / 180;
     }
 
     generateIntersectionsFromRoad(road) {
@@ -253,6 +464,13 @@ export default class RoadMap {
         let road2 = jpArr[1].getRoad();
 
         let angleDiff1 = Math.abs(road1.getAngle() - road2.getAngle());
+        let angleDiff2 = Math.abs(180 - angleDiff1);
+
+        return RoadMap.getMinNum(angleDiff1, angleDiff2);
+    }
+
+    static getMinAngleDiff(angle1, angle2) {
+        let angleDiff1 = Math.abs(angle1 - angle2);
         let angleDiff2 = Math.abs(180 - angleDiff1);
 
         return RoadMap.getMinNum(angleDiff1, angleDiff2);

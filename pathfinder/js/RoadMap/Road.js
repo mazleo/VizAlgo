@@ -27,6 +27,7 @@ export default class Road {
             this.canvasEndingEdge = canvasEndingEdge;
             this.angle = angle;
             this.startingPoint = startingPoint;
+            this.currentCanvasStartingEdge = this.calcCurrentStartingEdge(map);
             this.bottomLeftPoint = this.getBottomLeftPoint(map);
             this.bottomRightPoint = this.getBottomRightPoint(map);
             this.topLeftPoint = this.getTopLeftPoint(map);
@@ -63,20 +64,22 @@ export default class Road {
         var angleBounds = null;
 
         angleBounds = this.getAngleBounds();
-        switch (this.canvasStartingEdge) {
-            case this.LEFT_STARTING_EDGE:
-                if (this.angle <= angleBounds.angleBound1) {
+        switch (this.currentCanvasStartingEdge) {
+            case RoadMap.LEFT_STARTING_EDGE:
+                if (this.angle > 270 && this.angle <= angleBounds.angleBound1) {
                     y = this.startingPoint.getLongitude();
                 }
-                else if (this.angle <= angleBounds.angleBound2) {
+                else if (
+                    (this.angle > angleBounds.angleBound1 && this.angle <= 360)
+                    || (this.angle >= 0 && this.angle <= angleBounds.angleBound2)
+                ) {
                     x = this.bottomRightPoint.getLatitude();
                 }
                 else {
                     y = this.bottomRightPoint.getLongitude() - this.startingPoint.getLongitude();
                 }
                 break;
-
-            case this.TOP_STARTING_EDGE:
+            case RoadMap.TOP_STARTING_EDGE:
                 if (this.angle <= angleBounds.angleBound1) {
                     x = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
                 }
@@ -88,7 +91,7 @@ export default class Road {
                 }
                 break;
 
-            case this.RIGHT_STARTING_EDGE:
+            case RoadMap.RIGHT_STARTING_EDGE:
                 if (this.angle <= angleBounds.angleBound1) {
                     y = this.bottomLeftPoint.getLongitude() - this.startingPoint.getLongitude();
                 }
@@ -100,7 +103,7 @@ export default class Road {
                 }
                 break;
 
-            case this.BOTTOM_STARTING_EDGE:
+            case RoadMap.BOTTOM_STARTING_EDGE:
                 if (this.angle <= angleBounds.angleBound1) {
                     x = this.startingPoint.getLatitude();
                 }
@@ -124,13 +127,15 @@ export default class Road {
         var angleBound3 = null;
         var angleBound4 = null;
 
-        switch (this.canvasStartingEdge) {
-
-            case this.LEFT_STARTING_EDGE:
+        switch (this.currentCanvasStartingEdge) {
+            case RoadMap.LEFT_STARTING_EDGE:
                 var xDist = this.topRightPoint.getLatitude();
-                var yDist = -1 * this.startingPoint.getLongitude();
-                var angleBound1Rad = Math.atan(yDist / xDist);
+                var yDist = this.startingPoint.getLongitude();
+                var angleBound1Rad = Math.atan(-yDist / xDist);
                 angleBound1 = this.getDegreeFromRad(angleBound1Rad);
+                if (angleBound1 < 0) {
+                    angleBound1 = angleBound1 + 360;
+                }
 
                 xDist = this.bottomRightPoint.getLatitude();
                 yDist = this.bottomRightPoint.getLongitude() - this.startingPoint.getLongitude();
@@ -138,7 +143,7 @@ export default class Road {
                 angleBound2 = this.getDegreeFromRad(angleBound2Rad);
                 break;
 
-            case this.TOP_STARTING_EDGE:
+            case RoadMap.TOP_STARTING_EDGE:
                 var xDist = this.bottomRightPoint.getLatitude() - this.startingPoint.getLatitude();
                 var yDist = this.bottomRightPoint.getLongitude();
                 var angleBound1Rad = Math.atan(yDist / xDist);
@@ -151,7 +156,7 @@ export default class Road {
                 angleBound2 = 180 - diffAngleBound2;
                 break;
 
-            case this.RIGHT_STARTING_EDGE:
+            case RoadMap.RIGHT_STARTING_EDGE:
                 var xDist = this.startingPoint.getLatitude();
                 var yDist = this.bottomLeftPoint.getLongitude() - this.startingPoint.getLongitude();
                 var angleBound1Rad = Math.atan(xDist / yDist);
@@ -163,7 +168,7 @@ export default class Road {
                 angleBound2 = this.getDegreeFromRad(additionAngleBound2Rad) + 180;
                 break;
 
-            case this.BOTTOM_STARTING_EDGE:
+            case RoadMap.BOTTOM_STARTING_EDGE:
                 var xDist = this.startingPoint.getLatitude();
                 var yDist = this.startingPoint.getLongitude();
                 var additionAngleBound1Rad = Math.atan(yDist / xDist);
@@ -185,6 +190,23 @@ export default class Road {
 
     getRadFromDegree(degree) {
         return (degree * Math.PI) / 180;
+    }
+
+    calcCurrentStartingEdge(map) {
+        let x = this.startingPoint.getLatitude();
+        let y = this.startingPoint.getLongitude();
+        if (y == 0 && (x >= 0 && x <= map.width)) {
+            return RoadMap.TOP_STARTING_EDGE;
+        }
+        else if (y == map.height && (x >= 0 && x <= map.width)) {
+            return RoadMap.BOTTOM_STARTING_EDGE;
+        }
+        else if (x == 0 && (y >= 0 && y <= map.height)) {
+            return RoadMap.LEFT_STARTING_EDGE;
+        }
+        else if (x == map.width && (y >= 0 && y <= map.height)) {
+            return RoadMap.RIGHT_STARTING_EDGE;
+        }
     }
 
     generateStraightRoad() {
