@@ -96,3 +96,10 @@ __JL 3.28.2020__
     - Refactor RoadMap
 - Add appropriate tests
 - Get primitive version of intersection detection to work
+
+__JL 3.29.2020__
+- Fix intersection detection BFS bugs
+- Set per road intersections
+- Complete edge generation
+- Write appropriate tests
+- Write appropriate map drawings (for edges)
