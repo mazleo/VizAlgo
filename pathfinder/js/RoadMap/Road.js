@@ -232,7 +232,8 @@ export default class Road {
             currentX += xOffset;
             currentY += yOffset;
 
-            var newPoint = new Point(currId, currentX, currentY, this);
+            var newPoint = new Point(currId, currentX, currentY);
+            newPoint.setContainingRoad(this);
             consecutivePoints.push(newPoint);
             currId++;
         }

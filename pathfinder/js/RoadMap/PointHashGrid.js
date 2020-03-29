@@ -6,8 +6,8 @@ import PointHashGridLinkedList from './PointHashGridLinkedList.js';
 
 export default class PointHashGrid {
     constructor(map) {
-        this.PIXELS_PER_BUCKET = 20;
-        this.INTERSECTION_VALIDATION_RADIUS = 20;
+        this.PIXELS_PER_BUCKET = 200;
+        this.INTERSECTION_VALIDATION_RADIUS = 40;
         this.INTERSECTION_SEARCH_TYPE = 0;
         this.POINT_SEARCH_TYPE = 1;
         this.size = 0;
@@ -112,11 +112,13 @@ export default class PointHashGrid {
         let currentLL = this.grid[currentBFSCell.r][currentBFSCell.c];
         let pointPtr = currentLL.front;
         while (pointPtr != null) {
-            let mhIndex = this.getComplementaryOrNewHeapIndex(point, pointPtr.point, minDistanceHeapArray);
-            if (minDistanceHeapArray[mhIndex] == undefined) {
-                minDistanceHeapArray[mhIndex] = new MinDistanceHeap(point, pointPtr.point);
+            if (PointHashGrid.calcPointsDistance(point, pointPtr.point) <= this.INTERSECTION_VALIDATION_RADIUS) {
+                let mhIndex = this.getComplementaryOrNewHeapIndex(point, pointPtr.point, minDistanceHeapArray);
+                if (minDistanceHeapArray[mhIndex] == undefined) {
+                    minDistanceHeapArray[mhIndex] = new MinDistanceHeap(point, pointPtr.point);
+                }
+                minDistanceHeapArray[mhIndex].insert(point, pointPtr.point);
             }
-            minDistanceHeapArray[mhIndex].insert(point, pointPtr.point);
 
             pointPtr = pointPtr.next;
         }
@@ -191,6 +193,13 @@ export default class PointHashGrid {
         this.populateMinDistanceHeapsFromPointBFS(point, bfsQueue.getFront(), minDistanceHeapArray, searchType, bfsQueue, visitedCells, currentRadius, traversalLevel, populatedCellFound);
     }
 
+    static calcPointsDistance(point1, point2) {
+        let xDist = Math.abs(point1.getLatitude() - point2.getLatitude());
+        let yDist = Math.abs(point1.getLongitude() - point2.getLongitude());
+
+        return Math.sqrt((xDist * xDist) + (yDist * yDist));
+    }
+
     generateMinDistanceHeapsFromRoad(road) {
         let minDistanceHeapArray = new Array();
         let bfsQueue = new BFSQueue();
@@ -199,12 +208,15 @@ export default class PointHashGrid {
             let r = this.calculateRKey(point);
             let c = this.calculateCKey(point);
             if (!this.isGridCellEmpty(r, c)) {
+                // console.log('POPULATED GRID CELL');
+                //console.log(r + ', ' + c);
                 bfsQueue.enqueue(r, c);
                 let currentBFSCell = bfsQueue.getFront();
                 this.populateMinDistanceHeapsFromPointBFS(point, currentBFSCell, minDistanceHeapArray, this.INTERSECTION_SEARCH_TYPE, bfsQueue, visitedCells, 1, 1, false);
             }
         }
 
+        //console.log(minDistanceHeapArray);
         return minDistanceHeapArray;
     }
 

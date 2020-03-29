@@ -36,8 +36,8 @@ export default class RoadMap {
         this.INTERSECTION_MIN_DISTANCE = 200;
         this.width = width;
         this.height = height;
-        this.numOfPoints = 0;
-        this.numOfRoads = 0;
+        //this.numOfPoints = 0;
+        //this.numOfRoads = 0;
         this.points = new Map();
         this.firstStartingEdge = this.getRandomStartingEdge();
         this.firstEndingEdge = this.getEndingEdge(this.firstStartingEdge);
@@ -226,12 +226,12 @@ export default class RoadMap {
             do {
                 var newRoadId = this.roads.size;
                 var newRoad = new Road(newRoadId, startingEdge, endingEdge, angle, startingPoint, this);
+                newRoad.startingPoint.setContainingRoad(newRoad);
 
-                for (var point of newRoad.getConsecutivePoints()) {
-                    this.points.set(point.id, point);
-                }
-
+                this.setRoadPoints(newRoad);
                 this.roads.set(newRoad.id, newRoad);
+                this.pointHashGrid.putRoad(newRoad);
+                this.setIntersectionsFromArray(this.generateIntersectionsFromRoad(newRoad));
 
                 startingPoint = RoadMap.getNextStartingPoint(startingPoint.getLatitude(), startingPoint.getLongitude(), startingEdge, endingEdge, angle, this); 
             } while (startingPoint != null);
@@ -431,6 +431,19 @@ export default class RoadMap {
 
     generateIntersectionsFromRoad(road) {
         return this.pointHashGrid.generateIntersectionsFromRoad(road);
+    }
+
+    setRoadPoints(road) {
+        for (var point of road.getConsecutivePoints()) {
+            this.points.set(point.id, point);
+        }
+    }
+
+    setIntersectionsFromArray(intersectionArray) {
+        for (var intersection of intersectionArray) {
+            var key = this.intersections.size;
+            this.intersections.set(key, intersection);
+        }
     }
 
     static getDistanceBetweenIntersections(int1, int2) {

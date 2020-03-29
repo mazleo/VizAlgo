@@ -48,6 +48,36 @@ class MapVisualizer {
         two.add(path);
         two.update();
     }
+
+    static drawIntersections(two, intersections) {
+        for (var [key, intersection] of intersections) {
+            for (var [jpkey, jp] of intersection.getJunctionPoints()) {
+                var point = jp.getPoint();
+                var circle = two.makeCircle(point.getLatitude(), point.getLongitude(), 5);
+                circle.fill = 'white';
+                circle.noStroke();
+                two.update();
+            }
+        }
+    }
+
+    static drawPoints(two, points) {
+        for (var [key, point] of points) {
+            var circle = two.makeCircle(point.getLatitude(), point.getLongitude(), 2);
+            circle.fill = 'green';
+            circle.noStroke();
+            two.update();
+        }
+    }
+
+    static drawPointsInRoad(two, road) {
+        for (var point of road.getConsecutivePoints()) {
+            var circle = two.makeCircle(point.getLatitude(), point.getLongitude(), 1);
+            circle.fill = 'green';
+            circle.noStroke();
+            two.update();
+        }
+    }
 }
 
 MapVisualizer.PATH_MAP_TYPE = 0;

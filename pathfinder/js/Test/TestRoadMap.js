@@ -89,5 +89,9 @@ export default class TestRoadMap {
         console.log(map);
 
         MapVisualizer.drawMap(two, map.roads);
+        MapVisualizer.drawIntersections(two, map.intersections);
+        //console.log(map.roads.get(1).getConsecutivePoints());
+        //MapVisualizer.drawPointsInRoad(two, map.roads.get(1));
+        //MapVisualizer.drawPoints(two, map.points);
     }
 }
