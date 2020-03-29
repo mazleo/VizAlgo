@@ -95,3 +95,4 @@ __JL 3.28.2020__
     - Refactor Road
     - Refactor RoadMap
 - Add appropriate tests
+- Get primitive version of intersection detection to work
