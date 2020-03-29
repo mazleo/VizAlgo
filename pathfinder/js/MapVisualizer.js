@@ -1,5 +1,7 @@
-class MapVisualizer {
+import Point from './RoadMap/Point.js';
+import Intersection from './RoadMap/Intersection.js';
 
+export default class MapVisualizer {
     static createPathFromPoints(points, startPoint) {
         var anchors = new Array();
 
@@ -76,6 +78,42 @@ class MapVisualizer {
             circle.fill = 'green';
             circle.noStroke();
             two.update();
+        }
+    }
+
+    static drawEdge(two, edge) {
+        var path;
+        
+        path = MapVisualizer.createPathFromPoints(edge.getConsecutivePoints(), edge.getConsecutivePoints()[0]);
+        MapVisualizer.applyPathSettings(path, MapVisualizer.PATH_FOUND_TYPE);
+
+        for (var endPoint of edge.getEndPoints()) {
+            if (endPoint instanceof Point) {
+                var circle = two.makeCircle(endPoint.getLatitude(), endPoint.getLongitude(), 7);
+                circle.fill = '#4C96FA';
+                circle.noStroke();
+
+                two.update();
+            }
+            else if (endPoint instanceof Intersection) {
+                for (var [key, jp] of endPoint.getJunctionPoints()) {
+                    var point = jp.getPoint();
+                    var circle = two.makeCircle(point.getLatitude(), point.getLongitude(), 7);
+                    circle.fill = '#4C96FA';
+                    circle.noStroke();
+
+                    two.update();
+                }
+            }
+        }
+
+        two.add(path);
+        two.update();
+    }
+
+    static drawEdges(two, edges) {
+        for (var [key, edge] of edges) {
+            MapVisualizer.drawEdge(two, edge);
         }
     }
 }
