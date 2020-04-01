@@ -103,3 +103,10 @@ __JL 3.29.2020__
 - Complete edge generation
 - Write appropriate tests
 - Write appropriate map drawings (for edges)
+
+__JL 4.1.2020__
++ Partially implement UserInterface (Pin) features
+    - Implement drag and drop feature
+    - Modify styling and doc structure to aid feature implementation
+    - Add partially implemented test
+- Add automatic map generation upon creation of RoadMap entities
