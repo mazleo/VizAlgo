@@ -16,30 +16,31 @@ html {
 .app-wrapper {
   color: white;
   font-weight: lighter;
+  position: relative;
 }
-/* line 16, ../scss/main.scss */
+/* line 17, ../scss/main.scss */
 .app-wrapper .main-interface {
   flex-basis: 25%;
   background-color: #3A4C63;
   padding: 15px 30px;
 }
-/* line 20, ../scss/main.scss */
+/* line 21, ../scss/main.scss */
 .app-wrapper .main-interface .site-branding {
   font-family: "Audiowide", sans-serif;
   font-size: 1.43rem;
   text-align: center;
 }
-/* line 24, ../scss/main.scss */
+/* line 25, ../scss/main.scss */
 .app-wrapper .main-interface .site-branding .app-logo-white {
   width: 30px;
 }
-/* line 30, ../scss/main.scss */
+/* line 31, ../scss/main.scss */
 .app-wrapper .main-interface .algorithms-wrapper .algorithms-select-form .algorithms-input-group {
   text-align: center;
   margin-bottom: 10px;
   position: relative;
 }
-/* line 34, ../scss/main.scss */
+/* line 35, ../scss/main.scss */
 .app-wrapper .main-interface .algorithms-wrapper .algorithms-select-form .algorithms-input-group label {
   padding: 7px;
   background-color: #4A5F7C;
@@ -48,11 +49,11 @@ html {
   border-radius: 5px;
   cursor: pointer;
 }
-/* line 41, ../scss/main.scss */
+/* line 42, ../scss/main.scss */
 .app-wrapper .main-interface .algorithms-wrapper .algorithms-select-form .algorithms-input-group label:hover {
   background-color: #2F3F55;
 }
-/* line 45, ../scss/main.scss */
+/* line 46, ../scss/main.scss */
 .app-wrapper .main-interface .algorithms-wrapper .algorithms-select-form .algorithms-input-group input {
   position: absolute;
   top: 0;
@@ -61,12 +62,12 @@ html {
   height: 100%;
   visibility: hidden;
 }
-/* line 53, ../scss/main.scss */
+/* line 54, ../scss/main.scss */
 .app-wrapper .main-interface .algorithms-wrapper .algorithms-select-form .algorithms-input-group input:checked ~ label {
   background-color: white;
   color: #4A5F7C;
 }
-/* line 63, ../scss/main.scss */
+/* line 64, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button {
   width: 60px;
   height: 60px;
@@ -78,17 +79,17 @@ html {
   position: relative;
   margin-bottom: 15px;
 }
-/* line 73, ../scss/main.scss */
+/* line 74, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button img {
   width: 40px;
   height: 40px;
   cursor: pointer;
 }
-/* line 78, ../scss/main.scss */
+/* line 79, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button:focus, .app-wrapper .main-interface .map-buttons-wrapper .map-button:active {
   outline: 0;
 }
-/* line 81, ../scss/main.scss */
+/* line 82, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button:after {
   color: white;
   position: absolute;
@@ -96,69 +97,76 @@ html {
   font-size: 0.65rem;
   cursor: default;
 }
-/* line 90, ../scss/main.scss */
+/* line 91, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button.generate-map-button:after {
   content: "Generate";
   left: 7px;
 }
-/* line 96, ../scss/main.scss */
+/* line 97, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button.green-pin-container img {
   cursor: grab;
 }
-/* line 99, ../scss/main.scss */
+/* line 100, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button.green-pin-container:after {
   content: "Origin";
   left: 15px;
 }
-/* line 105, ../scss/main.scss */
+/* line 106, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button.red-pin-container img {
   cursor: grab;
 }
-/* line 108, ../scss/main.scss */
+/* line 109, ../scss/main.scss */
 .app-wrapper .main-interface .map-buttons-wrapper .map-button.red-pin-container:after {
   content: "Destination";
   left: 2px;
 }
-/* line 115, ../scss/main.scss */
+/* line 116, ../scss/main.scss */
 .app-wrapper .map-wrapper {
   flex-basis: 75%;
   background-color: #232F3F;
 }
-/* line 119, ../scss/main.scss */
+/* line 120, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper {
   bottom: 15px;
   right: 15px;
 }
-/* line 122, ../scss/main.scss */
+/* line 123, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button {
   padding: 3px 7px;
   border-radius: 5px;
   color: #232F3F;
   border: none;
 }
-/* line 127, ../scss/main.scss */
+/* line 128, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button:active, .app-wrapper .app-buttons-wrapper .app-button:focus {
   outline: 0;
 }
-/* line 131, ../scss/main.scss */
+/* line 132, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button.reset-button {
   background-color: #E85F62;
   margin-right: 5px;
 }
-/* line 134, ../scss/main.scss */
+/* line 135, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button.reset-button:hover {
   background-color: #c75356;
 }
-/* line 138, ../scss/main.scss */
+/* line 139, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button.visualize-button {
   background-color: #47E86D;
 }
-/* line 140, ../scss/main.scss */
+/* line 141, ../scss/main.scss */
 .app-wrapper .app-buttons-wrapper .app-button.visualize-button:hover {
   background-color: #39b757;
 }
-
 /* line 146, ../scss/main.scss */
+.app-wrapper img#origin-pin, .app-wrapper img#destination-pin {
+  width: 40px;
+  height: 40px;
+  cursor: grab;
+  position: absolute;
+}
+
+/* line 153, ../scss/main.scss */
 .tooltip {
   font-size: 0.65rem;
 }

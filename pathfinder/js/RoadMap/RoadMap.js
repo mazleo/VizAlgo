@@ -50,6 +50,7 @@ export default class RoadMap {
         this.intersections = new Map();
         this.pointHashGrid = new PointHashGrid(this);
         this.edges = new Map();
+        this.generateRoadCollection();
     }
 
     getRandomStartingEdge() {

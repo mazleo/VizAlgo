@@ -101,7 +101,6 @@ export default class TestRoadMap {
         let map = new RoadMap(mapWrapper.offsetWidth, mapWrapper.offsetHeight);
         var two = new Two({width: mapWrapper.offsetWidth, height: mapWrapper.offsetHeight, type: Two.Types.canvas}).appendTo(mapWrapper);
 
-        map.generateRoadCollection();
         console.log(map);
 
         /*

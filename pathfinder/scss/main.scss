@@ -13,6 +13,7 @@ html {
 .app-wrapper {
     color: white;
     font-weight: $light-font-weight; 
+    position: relative;
     .main-interface {
         flex-basis: 25%;
         background-color: $light-blue;
@@ -141,6 +142,12 @@ html {
                 background-color: #39b757;
             }
         }
+    }
+    img#origin-pin, img#destination-pin {
+        width: 40px;
+        height: 40px;
+        cursor: grab;
+        position: absolute;
     }
 }
 .tooltip {
