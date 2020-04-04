@@ -116,6 +116,21 @@ export default class MapVisualizer {
             MapVisualizer.drawEdge(two, edge);
         }
     }
+
+    static mapGenerationCircleAnimation(circleRadius) {
+        var canvas = document.getElementsByTagName('canvas')[0];
+        if (circleRadius < (canvas.offsetWidth * 2)) {
+            canvas.style.clipPath = 'circle(' + circleRadius + 'px at center)';
+            window.requestAnimationFrame(function() {
+                circleRadius += 7;
+                MapVisualizer.mapGenerationCircleAnimation(circleRadius);
+            });
+        }
+    }
+
+    static animateMapGeneration() {
+        MapVisualizer.mapGenerationCircleAnimation(0);
+    }
 }
 
 MapVisualizer.PATH_MAP_TYPE = 0;

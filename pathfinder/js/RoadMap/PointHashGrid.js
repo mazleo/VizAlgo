@@ -3,6 +3,8 @@ import BFSQueue from './BFSQueue.js';
 import MinDistanceHeap from './MinDistanceHeap.js'
 import PointHashGridNode from './PointHashGridNode.js';
 import PointHashGridLinkedList from './PointHashGridLinkedList.js';
+import Point from './Point.js';
+import Road from './Road.js';
 
 export default class PointHashGrid {
     constructor(map) {
@@ -311,7 +313,8 @@ export default class PointHashGrid {
     }
 
     getClosestPointFromLocation(latitude, longitude, map) {
-        let mousePoint = new Point(-1, latitude, longitude, new Road(-1, map));
+        let mousePoint = new Point(-1, latitude, longitude);
+        mousePoint.setContainingRoad(new Road(-1, null, null, null, null, map));
         let minHeapArr = new Array();
         let bfsQueue = new BFSQueue();
         bfsQueue.enqueue(this.calculateRKey(mousePoint), this.calculateCKey(mousePoint));

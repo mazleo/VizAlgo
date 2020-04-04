@@ -164,9 +164,10 @@ html {
   height: 40px;
   cursor: grab;
   position: absolute;
+  visibility: hidden;
 }
 
-/* line 153, ../scss/main.scss */
+/* line 154, ../scss/main.scss */
 .tooltip {
   font-size: 0.65rem;
 }

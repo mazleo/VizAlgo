@@ -10,6 +10,7 @@ import Intersection from '../RoadMap/Intersection.js';
 import Edge from '../RoadMap/Edge.js';
 import Road from '../RoadMap/Road.js';
 import RoadMap from '../RoadMap/RoadMap.js';
+import MapVisualizer from '../MapVisualizer.js';
 
 export default class TestPointHashGrid {
     static testGetNumRows() {
@@ -532,20 +533,12 @@ export default class TestPointHashGrid {
     static testGetClosestPointFromLocation() {
         let mapWrapper = document.getElementById('map-wrapper');
         let map = new RoadMap(mapWrapper.offsetWidth, mapWrapper.offsetHeight);
-        let phg = new PointHashGrid(map);
         var two = new Two({width: mapWrapper.offsetWidth, height: mapWrapper.offsetHeight, type: Two.Types.canvas}).appendTo(mapWrapper);
-
-        for (var t = 0; t < 5; t++) {
-            map.generateRoad();
-            var r = map.roads.get(t);
-            phg.putRoad(r);
-        }
-        console.log(phg);
 
         MapVisualizer.drawMap(two, map.roads);
 
         mapWrapper.addEventListener('click', function(event) {
-            var closestPoint = phg.getClosestPointFromLocation(event.offsetX, event.offsetY, map);
+            var closestPoint = map.pointHashGrid.getClosestPointFromLocation(event.offsetX, event.offsetY, map);
             var circle = two.makeCircle(closestPoint.getLatitude(), closestPoint.getLongitude(), 5);
             circle.fill = "white";
             circle.noStroke();

@@ -9,6 +9,8 @@ import MinDistanceHeap from './MinDistanceHeap.js'
 import PointHashGridNode from './PointHashGridNode.js';
 import PointHashGridLinkedList from './PointHashGridLinkedList.js';
 import PointHashGrid from './PointHashGrid.js';
+import MapVisualizer from '../MapVisualizer.js';
+import UserInterface from '../UserInterface/UserInterface.js';
 
 export default class RoadMap {
     static TOP_STARTING_EDGE = 0;
@@ -198,6 +200,8 @@ export default class RoadMap {
     }
 
     generateRoadCollection() {
+        this.onMapGenerationStart();
+
         for (var v = 0; v < 2; v++) {
             var startingPoint = null;
             var startingEdge = v == 0 ? this.firstStartingEdge : this.secondStartingEdge;
@@ -249,6 +253,8 @@ export default class RoadMap {
                 road.setEdges(edgesMap);
             }
         }
+
+        this.onMapGenerationEnd();
     }
 
     static getNextStartingPoint(prevLatitude, prevLongitude, startingEdge, endingEdge, angle, map) {
@@ -588,5 +594,15 @@ export default class RoadMap {
         }
 
         return edgesMap;
+    }
+
+    getClosestPointFromLocation(latitude, longitude) {
+        return this.pointHashGrid.getClosestPointFromLocation(latitude, longitude, this);
+    }
+
+    onMapGenerationStart() {
+    }
+
+    onMapGenerationEnd() {
     }
 }
