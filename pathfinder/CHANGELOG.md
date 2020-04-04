@@ -110,3 +110,16 @@ __JL 4.1.2020__
     - Modify styling and doc structure to aid feature implementation
     - Add partially implemented test
 - Add automatic map generation upon creation of RoadMap entities
+
+__JL 4.4.2020__
++ Pin drag and drop
+    - Snap to closest point and keep track of it
+    - Reset location when dropped outside map
+    - Set cursor styles
+- Initialize pin location
+- Partially implement UserInterface to complete Pin drag and drop feature
+- Fix bug in getting closest point feature
+- Add state function calls on RoadMap
+- Add appropriate tests
+- Add map generation animation in MapVisualizer
+- Make necessary changes in index.html
